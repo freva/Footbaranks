@@ -1,17 +1,23 @@
 package com.limon.clubelo.clubelobrowser;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.limon.clubelo.clubelobrowser.tasks.TeamRankingsTask;
+import com.limon.clubelo.clubelobrowser.tasks.interfaces.TeamRankingsCallback;
+import com.limon.clubelo.clubelobrowser.tasks.responce.TeamRankingsResponse;
 
-public class Rankings extends ActionBarActivity {
+
+public class Rankings extends TeamRankingsCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rankings);
+
+        new TeamRankingsTask(this).execute("2015-07-05");
     }
 
     @Override
@@ -34,5 +40,10 @@ public class Rankings extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onTeamRankingsReceived(TeamRankingsResponse trr) {
+
     }
 }
