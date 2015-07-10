@@ -20,7 +20,7 @@ public class Rankings extends TeamRankingsCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rankings);
 
-        new TeamRankingsTask(this).execute("2015-07-05");
+        new TeamRankingsTask(this).execute("2015-01-01");
     }
 
     @Override
