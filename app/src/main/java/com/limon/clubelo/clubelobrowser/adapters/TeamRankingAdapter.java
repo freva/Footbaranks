@@ -21,23 +21,37 @@ public class TeamRankingAdapter extends ArrayAdapter<TeamRanking> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         TeamRanking team = getItem(position);
+        ViewHolder viewHolder; // view lookup cache stored in tag
+
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_team_ratings, parent, false);
+            LayoutInflater inflater = LayoutInflater.from(getContext());
+            convertView = inflater.inflate(R.layout.item_team_ratings, parent, false);
+
+            viewHolder = new ViewHolder();
+            viewHolder.teamRank = (TextView) convertView.findViewById(R.id.teamRank);
+            viewHolder.countryFlag = (ImageView) convertView.findViewById(R.id.countryFlag);
+            viewHolder.teamName = (TextView) convertView.findViewById(R.id.teamName);
+            viewHolder.teamRating = (TextView) convertView.findViewById(R.id.teamRating);
+
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
         }
 
         int countryResource = convertView.getResources().getIdentifier("flag_" + team.getCountryCode().toLowerCase(), "drawable", parent.getContext().getApplicationContext().getPackageName());
 
-        TextView teamRank = (TextView) convertView.findViewById(R.id.teamRank);
-        ImageView countryFlag = (ImageView) convertView.findViewById(R.id.countryFlag);
-        TextView teamName = (TextView) convertView.findViewById(R.id.teamName);
-        TextView teamRating = (TextView) convertView.findViewById(R.id.teamRating);
-
-        teamRank.setText(team.getRank() != -1 ? Integer.toString(team.getRank()) : "-");
-        countryFlag.setImageResource(countryResource);
-        teamName.setText(team.getClubName());
-        teamRating.setText(String.format("%.2f", team.getElo()));
+        viewHolder.teamRank.setText(team.getRank() != -1 ? Integer.toString(team.getRank()) : "-");
+        viewHolder.countryFlag.setImageResource(countryResource);
+        viewHolder.teamName.setText(team.getClubName());
+        viewHolder.teamRating.setText(String.format("%.0f", team.getElo()));
 
         return convertView;
+    }
+
+
+    private static class ViewHolder {
+        private TextView teamRank, teamName, teamRating;
+        private ImageView countryFlag;
     }
 }

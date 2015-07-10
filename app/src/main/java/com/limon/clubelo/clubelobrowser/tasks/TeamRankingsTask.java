@@ -28,8 +28,8 @@ public class TeamRankingsTask extends AsyncTask<String, Void, List<TeamRanking>>
     protected void onPreExecute() {
         super.onPreExecute();
 
-        progress.setTitle("Loading");
-        progress.setMessage("Wait while loading...");
+        progress.setTitle("Downloading");
+        progress.setMessage("Downloading latest rankings...");
         progress.show();
     }
 
