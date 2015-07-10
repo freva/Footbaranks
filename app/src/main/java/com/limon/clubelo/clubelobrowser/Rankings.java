@@ -1,13 +1,16 @@
 package com.limon.clubelo.clubelobrowser;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ListView;
 
+import com.limon.clubelo.clubelobrowser.adapters.TeamRankingAdapter;
 import com.limon.clubelo.clubelobrowser.tasks.TeamRankingsTask;
 import com.limon.clubelo.clubelobrowser.tasks.interfaces.TeamRankingsCallback;
-import com.limon.clubelo.clubelobrowser.tasks.responce.TeamRankingsResponse;
+import com.limon.clubelo.clubelobrowser.tasks.responce.TeamRanking;
+
+import java.util.List;
 
 
 public class Rankings extends TeamRankingsCallback {
@@ -43,7 +46,10 @@ public class Rankings extends TeamRankingsCallback {
     }
 
     @Override
-    public void onTeamRankingsReceived(TeamRankingsResponse trr) {
+    public void onTeamRankingsReceived(List<TeamRanking> teamRankings) {
+        TeamRankingAdapter adapter = new TeamRankingAdapter(this.getApplicationContext(), teamRankings);
 
+        ListView listView = (ListView) findViewById(R.id.lvTeams);
+        listView.setAdapter(adapter);
     }
 }

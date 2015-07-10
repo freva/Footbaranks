@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">ClubElo</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="teamRanking_name">Name</string>
+    <string name="teamRanking_rating">Rating</string>
+    <string name="country">Country</string>
 </resources>

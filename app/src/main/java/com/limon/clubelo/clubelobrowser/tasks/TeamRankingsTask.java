@@ -4,15 +4,17 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import com.limon.clubelo.clubelobrowser.tasks.interfaces.TeamRankingsCallback;
-import com.limon.clubelo.clubelobrowser.tasks.responce.TeamRankingsResponse;
+import com.limon.clubelo.clubelobrowser.tasks.responce.TeamRanking;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-public class TeamRankingsTask extends AsyncTask<String, Void, TeamRankingsResponse> {
+public class TeamRankingsTask extends AsyncTask<String, Void, List<TeamRanking>> {
     private static final String apiURL = "http://api.clubelo.com/";
     private ProgressDialog progress;
     private TeamRankingsCallback trc;
@@ -32,8 +34,8 @@ public class TeamRankingsTask extends AsyncTask<String, Void, TeamRankingsRespon
     }
 
     @Override
-    protected TeamRankingsResponse doInBackground(String... date) {
-        TeamRankingsResponse teamRankings = new TeamRankingsResponse();
+    protected List<TeamRanking> doInBackground(String... date) {
+        List<TeamRanking> teamRankings = new ArrayList<>();
         HttpURLConnection connection = null;
 
         try {
@@ -52,28 +54,22 @@ public class TeamRankingsTask extends AsyncTask<String, Void, TeamRankingsRespon
                     String line = reader.readLine(); //First line is the CSV header
                     while ((line = reader.readLine()) != null) {
                         if (line.length() > 0) {
-                            teamRankings.addTeamToRankings(line.split(","));
+                            teamRankings.add(new TeamRanking(line.split(",")));
                         }
                     }
                     break;
 
                 case 404:
-                    teamRankings.setStatusMessage("Invalid date"); //API doesn't actually support this yet
-                    break;
+                    throw new IllegalArgumentException("Invalid date"); //API doesn't actually support this yet
 
                 default:
-                    teamRankings.setStatusMessage("Server could not respond");
+                    throw new UnknownError("Server could not respond");
             }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
             if (connection != null) {
-                try {
-                    connection.disconnect();
-                } catch (Exception e) {
-                    teamRankings.setStatusMessage("Something wrong with the Internet connection");
-                    e.printStackTrace();
-                }
+                connection.disconnect();
             }
         }
 
@@ -81,7 +77,7 @@ public class TeamRankingsTask extends AsyncTask<String, Void, TeamRankingsRespon
     }
 
     @Override
-    protected void onPostExecute(TeamRankingsResponse trr) {
+    protected void onPostExecute(List<TeamRanking> trr) {
         progress.dismiss();
         trc.onTeamRankingsReceived(trr);
     }
