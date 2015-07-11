@@ -8,19 +8,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.limon.clubelo.clubelobrowser.tasks.responce.TeamRanking;
+import com.limon.clubelo.clubelobrowser.containers.TeamRankingItem;
 import com.limon.clubelo.clubelobrowser.R;
 
 import java.util.List;
 
-public class TeamRankingAdapter extends ArrayAdapter<TeamRanking> {
-    public TeamRankingAdapter(Context context, List<TeamRanking> teams) {
+public class TeamRankingAdapter extends ArrayAdapter<TeamRankingItem> {
+    public TeamRankingAdapter(Context context, List<TeamRankingItem> teams) {
         super(context, 0, teams);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TeamRanking team = getItem(position);
+        TeamRankingItem team = getItem(position);
         ViewHolder viewHolder; // view lookup cache stored in tag
 
         // Check if an existing view is being reused, otherwise inflate the view

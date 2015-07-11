@@ -1,12 +1,12 @@
-package com.limon.clubelo.clubelobrowser.tasks.responce;
+package com.limon.clubelo.clubelobrowser.containers;
 
 
-public class TeamRanking {
+public class TeamRankingItem {
     private int rank, level;
     private String clubName, countryCode;
     private double elo;
 
-    public TeamRanking(String... data) {
+    public TeamRankingItem(String... data) {
         this.rank = (data[0].length() > 2 ? -1 : Integer.parseInt(data[0]));
         this.clubName = data[1];
         this.countryCode = data[2];

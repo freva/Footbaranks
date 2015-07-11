@@ -15,7 +15,7 @@ import com.limon.clubelo.clubelobrowser.adapters.ToolbarDateRankingsAdapter;
 import com.limon.clubelo.clubelobrowser.containers.ToolbarDateRankingsItem;
 import com.limon.clubelo.clubelobrowser.tasks.TeamRankingsTask;
 import com.limon.clubelo.clubelobrowser.tasks.interfaces.TeamRankingsCallback;
-import com.limon.clubelo.clubelobrowser.tasks.responce.TeamRanking;
+import com.limon.clubelo.clubelobrowser.containers.TeamRankingItem;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -26,7 +26,7 @@ import java.util.Locale;
 
 public class Rankings extends AppCompatActivity implements TeamRankingsCallback, AdapterView.OnItemSelectedListener {
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-    private List<TeamRanking> teamRankings;
+    private List<TeamRankingItem> teamRankings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +74,7 @@ public class Rankings extends AppCompatActivity implements TeamRankingsCallback,
     }
 
     @Override
-    public void onTeamRankingsReceived(List<TeamRanking> teamRankings) {
+    public void onTeamRankingsReceived(List<TeamRankingItem> teamRankings) {
         this.teamRankings = teamRankings;
         TeamRankingAdapter adapter = new TeamRankingAdapter(this.getApplicationContext(), teamRankings);
 

@@ -5,7 +5,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import com.limon.clubelo.clubelobrowser.tasks.interfaces.TeamRankingsCallback;
-import com.limon.clubelo.clubelobrowser.tasks.responce.TeamRanking;
+import com.limon.clubelo.clubelobrowser.containers.TeamRankingItem;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,7 +15,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TeamRankingsTask extends AsyncTask<String, Void, List<TeamRanking>> {
+public class TeamRankingsTask extends AsyncTask<String, Void, List<TeamRankingItem>> {
     private static final String apiURL = "http://api.clubelo.com/";
     private ProgressDialog progress;
     private TeamRankingsCallback trc;
@@ -35,8 +35,8 @@ public class TeamRankingsTask extends AsyncTask<String, Void, List<TeamRanking>>
     }
 
     @Override
-    protected List<TeamRanking> doInBackground(String... date) {
-        List<TeamRanking> teamRankings = new ArrayList<>();
+    protected List<TeamRankingItem> doInBackground(String... date) {
+        List<TeamRankingItem> teamRankings = new ArrayList<>();
         HttpURLConnection connection = null;
 
         try {
@@ -55,7 +55,7 @@ public class TeamRankingsTask extends AsyncTask<String, Void, List<TeamRanking>>
                     String line = reader.readLine(); //First line is the CSV header
                     while ((line = reader.readLine()) != null) {
                         if (line.length() > 0) {
-                            teamRankings.add(new TeamRanking(line.split(",")));
+                            teamRankings.add(new TeamRankingItem(line.split(",")));
                         }
                     }
                     break;
@@ -78,7 +78,7 @@ public class TeamRankingsTask extends AsyncTask<String, Void, List<TeamRanking>>
     }
 
     @Override
-    protected void onPostExecute(List<TeamRanking> trr) {
+    protected void onPostExecute(List<TeamRankingItem> trr) {
         progress.dismiss();
         trc.onTeamRankingsReceived(trr);
     }
