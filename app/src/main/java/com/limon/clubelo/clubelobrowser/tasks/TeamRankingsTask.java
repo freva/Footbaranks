@@ -30,7 +30,7 @@ public class TeamRankingsTask extends AsyncTask<String, Void, List<TeamRankingIt
         super.onPreExecute();
 
         progress.setTitle("Downloading");
-        progress.setMessage("Downloading latest rankings...");
+        progress.setMessage("Downloading club ratings...");
         progress.show();
     }
 
