@@ -3,7 +3,7 @@ package com.limon.clubelo.clubelobrowser.containers;
 
 public class TeamRankingItem {
     private int rank, level;
-    private String clubName, countryCode;
+    private String clubName, countryCode, dateFrom;
     private double elo;
 
     public TeamRankingItem(String... data) {
@@ -12,6 +12,7 @@ public class TeamRankingItem {
         this.countryCode = data[2];
         this.level = Integer.parseInt(data[3]);
         this.elo = Double.parseDouble(data[4]);
+        this.dateFrom = data[5];
     }
 
     public int getRank() {
@@ -32,5 +33,9 @@ public class TeamRankingItem {
 
     public double getElo() {
         return elo;
+    }
+
+    public String getDateFrom() {
+        return dateFrom;
     }
 }
