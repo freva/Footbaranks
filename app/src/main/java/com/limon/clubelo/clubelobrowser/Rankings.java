@@ -4,8 +4,6 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
@@ -32,7 +30,6 @@ import general.SpinnerTrigger;
 public class Rankings extends AppCompatActivity implements TeamRankingsCallback, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private static final long minDate = -977529600000L; // 10/01/1939
-    private List<TeamRankingItem> teamRankings;
     private Date lastDate;
 
     @Override
@@ -52,32 +49,9 @@ public class Rankings extends AppCompatActivity implements TeamRankingsCallback,
         mNavigationSpinner.setAdapter(adapter);
         mNavigationSpinner.setOnItemSelectedListener(this);
 
-        if(teamRankings == null) {
-            getRatings(new Date());
-        }
+        getRatings(new Date());
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_rankings, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     private void getRatings(Date date) {
         if(!date.equals(lastDate)) {
@@ -88,7 +62,6 @@ public class Rankings extends AppCompatActivity implements TeamRankingsCallback,
 
     @Override
     public void onTeamRankingsReceived(List<TeamRankingItem> teamRankings) {
-        this.teamRankings = teamRankings;
         TeamRankingAdapter adapter = new TeamRankingAdapter(this.getApplicationContext(), teamRankings);
 
         ListView listView = (ListView) findViewById(R.id.lvTeams);
