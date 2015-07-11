@@ -1,11 +1,16 @@
 package com.limon.clubelo.clubelobrowser;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.limon.clubelo.clubelobrowser.adapters.TeamRankingAdapter;
+import com.limon.clubelo.clubelobrowser.adapters.ToolbarDateRankingsAdapter;
 import com.limon.clubelo.clubelobrowser.tasks.TeamRankingsTask;
 import com.limon.clubelo.clubelobrowser.tasks.interfaces.TeamRankingsCallback;
 import com.limon.clubelo.clubelobrowser.tasks.responce.TeamRanking;
@@ -13,14 +18,26 @@ import com.limon.clubelo.clubelobrowser.tasks.responce.TeamRanking;
 import java.util.List;
 
 
-public class Rankings extends TeamRankingsCallback {
+public class Rankings extends AppCompatActivity implements TeamRankingsCallback {
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rankings);
 
-        new TeamRankingsTask(this).execute("2015-01-01");
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        //toolbar.setNavigationIcon(R.drawable.);
+
+        Spinner mNavigationSpinner = new Spinner(getSupportActionBar().getThemedContext());
+        toolbar.addView(mNavigationSpinner);
+
+        ToolbarDateRankingsAdapter adapter = new ToolbarDateRankingsAdapter(this.getApplicationContext());
+        mNavigationSpinner.setAdapter(adapter);
+
+        new TeamRankingsTask(this, this).execute("2015-01-01");
     }
 
     @Override

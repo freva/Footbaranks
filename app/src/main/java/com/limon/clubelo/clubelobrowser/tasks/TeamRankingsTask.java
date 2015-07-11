@@ -1,5 +1,6 @@
 package com.limon.clubelo.clubelobrowser.tasks;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
@@ -19,9 +20,9 @@ public class TeamRankingsTask extends AsyncTask<String, Void, List<TeamRanking>>
     private ProgressDialog progress;
     private TeamRankingsCallback trc;
 
-    public TeamRankingsTask(TeamRankingsCallback trc) {
+    public TeamRankingsTask(Activity activity, TeamRankingsCallback trc) {
         this.trc = trc;
-        progress = new ProgressDialog(trc);
+        progress = new ProgressDialog(activity);
     }
 
     @Override
