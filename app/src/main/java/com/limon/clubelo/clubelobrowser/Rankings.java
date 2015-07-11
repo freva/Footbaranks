@@ -1,6 +1,7 @@
 package com.limon.clubelo.clubelobrowser;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,7 +28,7 @@ import java.util.Locale;
 import general.SpinnerTrigger;
 
 
-public class Rankings extends AppCompatActivity implements TeamRankingsCallback, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
+public class Rankings extends AppCompatActivity implements TeamRankingsCallback, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private static final long minDate = -977529600000L; // 10/01/1939
     private Date lastDate;
@@ -65,9 +66,12 @@ public class Rankings extends AppCompatActivity implements TeamRankingsCallback,
         TeamRankingAdapter adapter = new TeamRankingAdapter(this.getApplicationContext(), teamRankings);
 
         ListView listView = (ListView) findViewById(R.id.lvTeams);
+        listView.setOnItemClickListener(this);
         listView.setAdapter(adapter);
     }
 
+
+    //Custom date selection listener
     @Override
     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
         Calendar cal = Calendar.getInstance();
@@ -75,6 +79,8 @@ public class Rankings extends AppCompatActivity implements TeamRankingsCallback,
         getRatings(cal.getTime());
     }
 
+
+    //Toolbar dropdown selection listeners
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Date getDate = ((ToolbarDateRankingsItem) parent.getItemAtPosition(position)).getDate();
@@ -94,4 +100,14 @@ public class Rankings extends AppCompatActivity implements TeamRankingsCallback,
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) { }
+
+
+    //Team ratings click listener
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        TeamRankingItem selectedTeam = ((TeamRankingItem) parent.getItemAtPosition(position));
+        Intent intent = new Intent(getBaseContext(), TeamDetails.class);
+        intent.putExtra("TEAM_NAME", selectedTeam.getClubName());
+        startActivity(intent);
+    }
 }
