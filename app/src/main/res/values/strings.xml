@@ -6,4 +6,7 @@
     <string name="teamRanking_name">Name</string>
     <string name="teamRanking_rating">Rating</string>
     <string name="country">Country</string>
+
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 </resources>

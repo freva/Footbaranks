@@ -1,11 +1,13 @@
 package com.limon.clubelo.clubelobrowser;
 
 import android.app.DatePickerDialog;
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
 import android.widget.ListView;
@@ -28,44 +30,45 @@ import java.util.Locale;
 import general.SpinnerTrigger;
 
 
-public class Rankings extends AppCompatActivity implements TeamRankingsCallback, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
+public class Rankings extends Fragment implements TeamRankingsCallback, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private static final long minDate = -977529600000L; // 10/01/1939
+    private AppCompatActivity appCompatActivity;
+    private View rootView;
     private Date lastDate;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rankings);
+        appCompatActivity = (AppCompatActivity) getActivity();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        //toolbar.setNavigationIcon(R.drawable.);
+        rootView = inflater.inflate(R.layout.activity_rankings, container, false);
 
-        Spinner mNavigationSpinner = new SpinnerTrigger(getSupportActionBar().getThemedContext());
-        toolbar.addView(mNavigationSpinner);
+        Spinner mNavigationSpinner = new SpinnerTrigger(appCompatActivity.getSupportActionBar().getThemedContext());
+        //toolbar.addView(mNavigationSpinner);
 
-        ToolbarDateRankingsAdapter adapter = new ToolbarDateRankingsAdapter(this.getApplicationContext());
+        ToolbarDateRankingsAdapter adapter = new ToolbarDateRankingsAdapter(appCompatActivity.getApplicationContext());
         mNavigationSpinner.setAdapter(adapter);
         mNavigationSpinner.setOnItemSelectedListener(this);
 
         getRatings(new Date());
+
+        return rootView;
     }
 
 
     private void getRatings(Date date) {
         if(!date.equals(lastDate)) {
             lastDate = date;
-            new TeamRankingsTask(this, this).execute(df.format(date));
+            new TeamRankingsTask(appCompatActivity, this).execute(df.format(date));
         }
     }
 
     @Override
     public void onTeamRankingsReceived(List<TeamRankingItem> teamRankings) {
-        TeamRankingAdapter adapter = new TeamRankingAdapter(this.getApplicationContext(), teamRankings);
+        TeamRankingAdapter adapter = new TeamRankingAdapter(appCompatActivity.getApplicationContext(), teamRankings);
 
-        ListView listView = (ListView) findViewById(R.id.lvTeams);
+        ListView listView = (ListView) rootView.findViewById(R.id.lvTeams);
         listView.setOnItemClickListener(this);
         listView.setAdapter(adapter);
     }
@@ -88,7 +91,7 @@ public class Rankings extends AppCompatActivity implements TeamRankingsCallback,
         if(getDate == null) {
             Calendar cal = Calendar.getInstance();
             cal.setTime(lastDate);
-            DatePickerDialog dpd = new DatePickerDialog(this, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            DatePickerDialog dpd = new DatePickerDialog(appCompatActivity, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
             dpd.getDatePicker().setMinDate(minDate);
             dpd.getDatePicker().setMaxDate(System.currentTimeMillis());
             dpd.show();
@@ -106,7 +109,7 @@ public class Rankings extends AppCompatActivity implements TeamRankingsCallback,
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         TeamRankingItem selectedTeam = ((TeamRankingItem) parent.getItemAtPosition(position));
-        Intent intent = new Intent(getBaseContext(), TeamDetails.class);
+        Intent intent = new Intent(appCompatActivity.getBaseContext(), TeamDetails.class);
         intent.putExtra("TEAM_NAME", selectedTeam.getClubName());
         startActivity(intent);
     }
