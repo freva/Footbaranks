@@ -1,7 +1,15 @@
 package com.limon.clubelo.clubelobrowser.containers;
 
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class TeamRankingItem {
+    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
     private int rank, level;
     private String clubName, countryCode, dateFrom;
     private double elo;
@@ -35,7 +43,16 @@ public class TeamRankingItem {
         return elo;
     }
 
-    public String getDateFrom() {
+    public Date getDateFrom() {
+        try {
+            return df.parse(dateFrom);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public String getDateFromString() {
         return dateFrom;
     }
 }

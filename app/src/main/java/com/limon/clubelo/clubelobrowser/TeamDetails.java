@@ -1,24 +1,32 @@
 package com.limon.clubelo.clubelobrowser;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
 import com.limon.clubelo.clubelobrowser.containers.TeamRankingItem;
-import com.limon.clubelo.clubelobrowser.tasks.TeamRankingsTask;
+import com.limon.clubelo.clubelobrowser.tasks.TeamDetailsTask;
 import com.limon.clubelo.clubelobrowser.tasks.interfaces.TeamRankingsCallback;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import lecho.lib.hellocharts.gesture.ZoomType;
+import lecho.lib.hellocharts.listener.ViewportChangeListener;
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
+import lecho.lib.hellocharts.model.Line;
+import lecho.lib.hellocharts.model.LineChartData;
+import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.model.Viewport;
+import lecho.lib.hellocharts.util.ChartUtils;
+import lecho.lib.hellocharts.view.LineChartView;
+import lecho.lib.hellocharts.view.PreviewLineChartView;
+
 public class TeamDetails extends AppCompatActivity implements TeamRankingsCallback {
-    private LineChart mChart;
+    private LineChartView chart;
+    private PreviewLineChartView previewChart;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,58 +38,96 @@ public class TeamDetails extends AppCompatActivity implements TeamRankingsCallba
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(teamName);
 
-        mChart = (LineChart) findViewById(R.id.chart1);
+        chart = (LineChartView) findViewById(R.id.chart);
+        previewChart = (PreviewLineChartView) findViewById(R.id.chart_preview);
 
-        new TeamRankingsTask(this, this).execute(teamName.replace(" ", "").toLowerCase());
-
-        //mChart.setOnChartValueSelectedListener(this);
-        mChart.setDrawGridBackground(false);
-        mChart.setDescription("");
-
-        // enable value highlighting
-        mChart.setHighlightEnabled(true);
-
-        // enable touch gestures
-        mChart.setTouchEnabled(true);
-
-        // enable scaling and dragging
-        mChart.setDragEnabled(true);
-        mChart.setScaleEnabled(true);
-
-        // if disabled, scaling can be done on x- and y-axis separately
-        mChart.setPinchZoom(false);
-
-        mChart.getAxisRight().setEnabled(false);
-        mChart.getAxisLeft().setStartAtZero(false);
+        new TeamDetailsTask(this, this).execute(teamName.replace(" ", "").toLowerCase());
     }
 
     @Override
     public void onTeamRankingsReceived(List<TeamRankingItem> teamRankings) {
-        ArrayList<String> xVals = new ArrayList<>();
-        ArrayList<Entry> yVals = new ArrayList<>();
+        List<PointValue> yValues = new ArrayList<>();
+        List<AxisValue> xValues = new ArrayList<>();
 
-        for (int i = 0; i < teamRankings.size(); i++) {
-            xVals.add(teamRankings.get(i).getDateFrom());
-            yVals.add(new Entry((int) teamRankings.get(i).getElo(), i));
+        String lastYear = teamRankings.get(0).getDateFromString().substring(0, 4);
+        for (int i = 0; i < teamRankings.size(); ++i) {
+            int daySinceStart = ((int) (teamRankings.get(i).getDateFrom().getTime()/86400000)) + 11314; //Calculates days since rating start (10/01/1939)
+            yValues.add(new PointValue(daySinceStart, (int) teamRankings.get(i).getElo()));
+
+            String newYear = teamRankings.get(i).getDateFromString().substring(0, 4);
+            if(!lastYear.equals(newYear)) {
+                AxisValue axisValue = new AxisValue(daySinceStart);
+                axisValue.setLabel(newYear);
+                xValues.add(axisValue);
+                lastYear = newYear;
+            }
         }
 
-        LineDataSet set1 = new LineDataSet(yVals, "DataSet 1");
-        set1.setColor(Color.BLACK);
-        set1.setCircleColor(Color.BLACK);
-        set1.setLineWidth(1f);
-        set1.setCircleSize(0f);
-        set1.setDrawCircleHole(false);
-        set1.setValueTextSize(9f);
-        set1.setFillAlpha(65);
-        set1.setFillColor(Color.BLACK);
+        Line line = new Line(yValues);
+        line.setColor(ChartUtils.COLOR_GREEN);
+        line.setHasPoints(false);
 
-        ArrayList<LineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set1); // add the datasets
+        List<Line> lines = new ArrayList<>();
+        lines.add(line);
 
-        // create a data object with the datasets
-        LineData data = new LineData(xVals, dataSets);
+        LineChartData data = new LineChartData(lines);
+        data.setAxisXBottom(new Axis(xValues).setHasLines(true));
+        data.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(4));
 
-        mChart.setData(data);
-        mChart.invalidate();
+        // prepare preview data, is better to use separate deep copy for preview chart.
+        // Set color to grey to make preview area more visible.
+        LineChartData previewData = new LineChartData(data);
+        previewData.getLines().get(0).setColor(ChartUtils.DEFAULT_DARKEN_COLOR);
+
+        chart.setLineChartData(data);
+        // Disable zoom/scroll for previewed chart, visible chart ranges depends on preview chart viewport so
+        // zoom/scroll is unnecessary.
+        chart.setZoomEnabled(false);
+        chart.setScrollEnabled(false);
+
+        previewChart.setLineChartData(previewData);
+        previewChart.setViewportChangeListener(new ViewportListener());
+
+        previewX();
+    }
+
+    private void previewX() {
+        List<PointValue> values = chart.getLineChartData().getLines().get(0).getValues();
+        float viewportRight = values.get(values.size() - 1).getX();
+
+        Viewport tempViewport = new Viewport(viewportRight-5*365, 0, viewportRight, 0);
+        previewChart.setCurrentViewport(tempViewport);
+        previewChart.setZoomType(ZoomType.HORIZONTAL);
+    }
+
+    /**
+     * Viewport listener for preview chart(lower one). in {@link #onViewportChanged(Viewport)} method change
+     * viewport of upper chart.
+     */
+    private class ViewportListener implements ViewportChangeListener {
+
+        @Override
+        public void onViewportChanged(Viewport newViewport) {
+            List<PointValue> values = chart.getLineChartData().getLines().get(0).getValues();
+
+            float minVal = Float.MAX_VALUE, maxVal = Float.MIN_VALUE;
+            for(int i=0; i < values.size() && values.get(i).getX() < newViewport.right; i+=2) {
+                if(values.get(i).getX() < newViewport.left) continue;
+
+                float val1 = values.get(i).getY();
+                float val2 = values.get(i+1).getY();
+
+                if(val1 > val2) {
+                    if(val1 > maxVal) maxVal = val1;
+                    if(val2 < minVal) minVal = val2;
+                } else {
+                    if(val2 > maxVal) maxVal = val2;
+                    if(val1 < minVal) minVal = val1;
+                }
+            }
+
+            newViewport.set(newViewport.left, maxVal*1.01f, newViewport.right, minVal*0.99f);
+            chart.setCurrentViewport(newViewport);
+        }
     }
 }
