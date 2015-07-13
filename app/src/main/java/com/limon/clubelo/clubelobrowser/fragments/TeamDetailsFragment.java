@@ -38,7 +38,7 @@ public class TeamDetailsFragment extends Fragment implements TeamRankingsCallbac
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        rootView = inflater.inflate(R.layout.activity_team_deatils, container, false);
+        rootView = inflater.inflate(R.layout.fragment_team_deatils, container, false);
         appCompatActivity = (MainActivity) getActivity();
 
         String teamName = getArguments().getString("TEAM_NAME");

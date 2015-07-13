@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
+import com.limon.clubelo.clubelobrowser.R;
 import com.limon.clubelo.clubelobrowser.containers.TeamRankingItem;
 import com.limon.clubelo.clubelobrowser.tasks.interfaces.TeamRankingsCallback;
 
@@ -29,8 +30,8 @@ public class TeamDetailsTask extends AsyncTask<String, Void, List<TeamRankingIte
     protected void onPreExecute() {
         super.onPreExecute();
 
-        progress.setTitle("Downloading");
-        progress.setMessage("Downloading club details...");
+        progress.setTitle(R.string.dialog_downloading);
+        progress.setMessage(progress.getContext().getString(R.string.dialog_downloading_club_details));
         progress.show();
     }
 

@@ -4,11 +4,11 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/drawer_item_ratings"
-            android:icon="@drawable/flag_blr"
+            android:icon="@drawable/drawer_icon_list"
             android:title="@string/drawer_item_ratings"/>
         <item
             android:id="@+id/drawer_item_matches"
-            android:icon="@drawable/flag_bel"
+            android:icon="@drawable/drawer_icon_football"
             android:title="@string/drawer_item_matches"/>
     </group>
 </menu>

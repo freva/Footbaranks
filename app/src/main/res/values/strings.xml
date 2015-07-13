@@ -11,4 +11,8 @@
     <string name="drawer_close">Close</string>
     <string name="drawer_item_ratings">Rankings</string>
     <string name="drawer_item_matches">Matches</string>
+
+    <string name="dialog_downloading">Downloading…</string>
+    <string name="dialog_downloading_rankings">Downloading club ratings…</string>
+    <string name="dialog_downloading_club_details">Downloading club details…</string>
 </resources>

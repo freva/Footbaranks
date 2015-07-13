@@ -47,7 +47,7 @@ public class RankingsFragment extends Fragment implements TeamRankingsCallback, 
         super.onCreate(savedInstanceState);
         appCompatActivity = (MainActivity) getActivity();
 
-        rootView = inflater.inflate(R.layout.activity_rankings, container, false);
+        rootView = inflater.inflate(R.layout.fragment_rankings, container, false);
 
         if(savedInstanceState == null) {
             ToolbarDateRankingsAdapter adapter = new ToolbarDateRankingsAdapter(appCompatActivity.getApplicationContext());

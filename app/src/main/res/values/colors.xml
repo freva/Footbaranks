@@ -9,5 +9,6 @@
 
     <color name="colorFragmentBackground">#fff</color>
     <color name="drawer_header_bg">#aaa</color>
+    <color name="drawer_layout_bg">#eee</color>
 
 </resources>
