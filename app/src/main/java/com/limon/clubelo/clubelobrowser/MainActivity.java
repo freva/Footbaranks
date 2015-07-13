@@ -1,7 +1,9 @@
 package com.limon.clubelo.clubelobrowser;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -10,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.limon.clubelo.clubelobrowser.fragments.MatchesFragment;
@@ -102,14 +105,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
-        if (item.getItemId() == android.support.v7.appcompat.R.id.home) {
-            return mDrawerToggle.onOptionsItemSelected(item);
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -124,5 +119,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(NAV_ITEM_ID, mNavItemId);
+    }
+
+
+    //Options menu stuff
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.support.v7.appcompat.R.id.home) {
+            return mDrawerToggle.onOptionsItemSelected(item);
+        }
+
+        switch (item.getItemId()) {
+            case R.id.options_visit_clubelo:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.clubelo.com"));
+                startActivity(browserIntent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -45,19 +45,9 @@ public class RankingsFragment extends Fragment implements TeamRankingsCallback, 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         appCompatActivity = (MainActivity) getActivity();
-
         rootView = inflater.inflate(R.layout.fragment_rankings, container, false);
-
-        if(savedInstanceState == null) {
-            ToolbarDateRankingsAdapter adapter = new ToolbarDateRankingsAdapter(appCompatActivity.getApplicationContext());
-            mNavigationSpinner = new SpinnerTrigger(appCompatActivity.getSupportActionBar().getThemedContext());
-            mNavigationSpinner.setAdapter(adapter);
-            mNavigationSpinner.setOnItemSelectedListener(this);
-
-            toolbar = (Toolbar) appCompatActivity.findViewById(R.id.toolbar);
-            toolbar.addView(mNavigationSpinner);
-        }
 
         appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
         getRatings(new Date());
@@ -73,6 +63,19 @@ public class RankingsFragment extends Fragment implements TeamRankingsCallback, 
         }
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        ToolbarDateRankingsAdapter adapter = new ToolbarDateRankingsAdapter(appCompatActivity.getApplicationContext());
+        mNavigationSpinner = new SpinnerTrigger(appCompatActivity.getSupportActionBar().getThemedContext());
+        mNavigationSpinner.setAdapter(adapter);
+        mNavigationSpinner.setOnItemSelectedListener(this);
+
+        toolbar = (Toolbar) appCompatActivity.findViewById(R.id.toolbar);
+        toolbar.addView(mNavigationSpinner);
+    }
 
     @Override
     public void onStop() {
