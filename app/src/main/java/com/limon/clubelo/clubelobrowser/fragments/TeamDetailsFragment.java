@@ -1,4 +1,4 @@
-package com.limon.clubelo.clubelobrowser;
+package com.limon.clubelo.clubelobrowser.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.limon.clubelo.clubelobrowser.MainActivity;
+import com.limon.clubelo.clubelobrowser.R;
 import com.limon.clubelo.clubelobrowser.containers.TeamRankingItem;
 import com.limon.clubelo.clubelobrowser.tasks.TeamDetailsTask;
 import com.limon.clubelo.clubelobrowser.tasks.interfaces.TeamRankingsCallback;
@@ -26,7 +28,7 @@ import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.LineChartView;
 import lecho.lib.hellocharts.view.PreviewLineChartView;
 
-public class TeamDetails extends Fragment implements TeamRankingsCallback {
+public class TeamDetailsFragment extends Fragment implements TeamRankingsCallback {
     private AppCompatActivity appCompatActivity;
     private PreviewLineChartView previewChart;
     private LineChartView chart;

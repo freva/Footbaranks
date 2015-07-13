@@ -1,4 +1,4 @@
-package com.limon.clubelo.clubelobrowser;
+package com.limon.clubelo.clubelobrowser.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -6,8 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.limon.clubelo.clubelobrowser.MainActivity;
+import com.limon.clubelo.clubelobrowser.R;
 
-public class Matches extends Fragment {
+
+public class MatchesFragment extends Fragment {
     private View rootView;
 
     @Override
@@ -16,7 +19,7 @@ public class Matches extends Fragment {
 
         rootView = inflater.inflate(R.layout.activity_rankings, container, false);
 
-        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Matches");
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("MatchesFragment");
 
         return rootView;
     }

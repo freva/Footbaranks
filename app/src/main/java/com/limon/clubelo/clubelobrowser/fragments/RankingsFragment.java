@@ -1,4 +1,4 @@
-package com.limon.clubelo.clubelobrowser;
+package com.limon.clubelo.clubelobrowser.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Fragment;
@@ -13,6 +13,8 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import com.limon.clubelo.clubelobrowser.MainActivity;
+import com.limon.clubelo.clubelobrowser.R;
 import com.limon.clubelo.clubelobrowser.adapters.TeamRankingAdapter;
 import com.limon.clubelo.clubelobrowser.adapters.ToolbarDateRankingsAdapter;
 import com.limon.clubelo.clubelobrowser.containers.ToolbarDateRankingsItem;
@@ -30,7 +32,7 @@ import java.util.Locale;
 import general.SpinnerTrigger;
 
 
-public class Rankings extends Fragment implements TeamRankingsCallback, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
+public class RankingsFragment extends Fragment implements TeamRankingsCallback, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private static final long minDate = -977529600000L; // 10/01/1939
 
@@ -128,7 +130,7 @@ public class Rankings extends Fragment implements TeamRankingsCallback, DatePick
         Bundle bundle = new Bundle();
         bundle.putString("TEAM_NAME", selectedTeam.getClubName());
 
-        Fragment teamDetails = new TeamDetails();
+        Fragment teamDetails = new TeamDetailsFragment();
         teamDetails.setArguments(bundle);
 
         this.getFragmentManager().beginTransaction().replace(R.id.frame_container, teamDetails, teamDetails.getClass().getSimpleName())

@@ -12,6 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.limon.clubelo.clubelobrowser.fragments.MatchesFragment;
+import com.limon.clubelo.clubelobrowser.fragments.RankingsFragment;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private static final long DRAWER_CLOSE_DELAY_MS = 250;
     private static final String NAV_ITEM_ID = "navItemId";
@@ -58,11 +61,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Fragment fragment = null;
         switch (position) {
             case R.id.drawer_item_ratings:
-                fragment = new Rankings();
+                fragment = new RankingsFragment();
                 break;
 
             case R.id.drawer_item_matches:
-                fragment = new Matches();
+                fragment = new MatchesFragment();
                 break;
 
             default:
