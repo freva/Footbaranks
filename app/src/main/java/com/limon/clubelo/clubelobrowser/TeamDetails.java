@@ -1,8 +1,11 @@
 package com.limon.clubelo.clubelobrowser;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.limon.clubelo.clubelobrowser.containers.TeamRankingItem;
 import com.limon.clubelo.clubelobrowser.tasks.TeamDetailsTask;
@@ -23,26 +26,32 @@ import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.LineChartView;
 import lecho.lib.hellocharts.view.PreviewLineChartView;
 
-public class TeamDetails extends AppCompatActivity implements TeamRankingsCallback {
-    private LineChartView chart;
+public class TeamDetails extends Fragment implements TeamRankingsCallback {
+    private AppCompatActivity appCompatActivity;
     private PreviewLineChartView previewChart;
+    private LineChartView chart;
+    private View rootView;
 
-
-    protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_team_deatils);
 
-        String teamName = getIntent().getExtras().getString("TEAM_NAME");
+        rootView = inflater.inflate(R.layout.activity_team_deatils, container, false);
+        appCompatActivity = (MainActivity) getActivity();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(teamName);
+        String teamName = getArguments().getString("TEAM_NAME");
+        appCompatActivity.getSupportActionBar().setTitle(teamName);
+        appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        chart = (LineChartView) findViewById(R.id.chart);
-        previewChart = (PreviewLineChartView) findViewById(R.id.chart_preview);
+        chart = (LineChartView) rootView.findViewById(R.id.chart);
+        previewChart = (PreviewLineChartView) rootView.findViewById(R.id.chart_preview);
 
-        new TeamDetailsTask(this, this).execute(teamName.replace(" ", "").toLowerCase());
+        new TeamDetailsTask(appCompatActivity, this).execute(teamName.replace(" ", "").toLowerCase());
+
+        return rootView;
     }
+
+
 
     @Override
     public void onTeamRankingsReceived(List<TeamRankingItem> teamRankings) {

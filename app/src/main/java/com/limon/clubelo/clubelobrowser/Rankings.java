@@ -2,7 +2,6 @@ package com.limon.clubelo.clubelobrowser;
 
 import android.app.DatePickerDialog;
 import android.app.Fragment;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,7 +35,7 @@ public class Rankings extends Fragment implements TeamRankingsCallback, DatePick
     private static final long minDate = -977529600000L; // 10/01/1939
 
     private AppCompatActivity appCompatActivity;
-    Spinner mNavigationSpinner;
+    private Spinner mNavigationSpinner;
     private Toolbar toolbar;
     private View rootView;
     private Date lastDate;
@@ -125,8 +124,14 @@ public class Rankings extends Fragment implements TeamRankingsCallback, DatePick
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         TeamRankingItem selectedTeam = ((TeamRankingItem) parent.getItemAtPosition(position));
-        Intent intent = new Intent(appCompatActivity.getBaseContext(), TeamDetails.class);
-        intent.putExtra("TEAM_NAME", selectedTeam.getClubName());
-        startActivity(intent);
+
+        Bundle bundle = new Bundle();
+        bundle.putString("TEAM_NAME", selectedTeam.getClubName());
+
+        Fragment teamDetails = new TeamDetails();
+        teamDetails.setArguments(bundle);
+
+        this.getFragmentManager().beginTransaction().replace(R.id.frame_container, teamDetails, teamDetails.getClass().getSimpleName())
+                .addToBackStack(null).commit();
     }
 }
