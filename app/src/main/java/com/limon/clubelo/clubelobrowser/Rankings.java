@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,24 +34,31 @@ import general.SpinnerTrigger;
 public class Rankings extends Fragment implements TeamRankingsCallback, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private static final long minDate = -977529600000L; // 10/01/1939
+
     private AppCompatActivity appCompatActivity;
+    Spinner mNavigationSpinner;
+    private Toolbar toolbar;
     private View rootView;
     private Date lastDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        appCompatActivity = (AppCompatActivity) getActivity();
+        appCompatActivity = (MainActivity) getActivity();
 
         rootView = inflater.inflate(R.layout.activity_rankings, container, false);
 
-        Spinner mNavigationSpinner = new SpinnerTrigger(appCompatActivity.getSupportActionBar().getThemedContext());
-        //toolbar.addView(mNavigationSpinner);
+        if(savedInstanceState == null) {
+            ToolbarDateRankingsAdapter adapter = new ToolbarDateRankingsAdapter(appCompatActivity.getApplicationContext());
+            mNavigationSpinner = new SpinnerTrigger(appCompatActivity.getSupportActionBar().getThemedContext());
+            mNavigationSpinner.setAdapter(adapter);
+            mNavigationSpinner.setOnItemSelectedListener(this);
 
-        ToolbarDateRankingsAdapter adapter = new ToolbarDateRankingsAdapter(appCompatActivity.getApplicationContext());
-        mNavigationSpinner.setAdapter(adapter);
-        mNavigationSpinner.setOnItemSelectedListener(this);
+            toolbar = (Toolbar) appCompatActivity.findViewById(R.id.toolbar);
+            toolbar.addView(mNavigationSpinner);
+        }
 
+        appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
         getRatings(new Date());
 
         return rootView;
@@ -62,6 +70,14 @@ public class Rankings extends Fragment implements TeamRankingsCallback, DatePick
             lastDate = date;
             new TeamRankingsTask(appCompatActivity, this).execute(df.format(date));
         }
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        toolbar.removeView(mNavigationSpinner);
     }
 
     @Override

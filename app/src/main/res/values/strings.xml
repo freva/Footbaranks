@@ -9,4 +9,6 @@
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="drawer_item_ratings">Rankings</string>
+    <string name="drawer_item_matches">Matches</string>
 </resources>

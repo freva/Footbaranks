@@ -1,7 +1,6 @@
 package com.limon.clubelo.clubelobrowser;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // load saved navigation state if present
         if (savedInstanceState == null) {
-            mNavItemId = R.id.drawer_item_1;
+            mNavItemId = R.id.drawer_item_ratings;
         } else {
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
         }
@@ -58,8 +57,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void displayView(int position) {
         Fragment fragment = null;
         switch (position) {
-            case R.id.drawer_item_1:
+            case R.id.drawer_item_ratings:
                 fragment = new Rankings();
+                break;
+
+            case R.id.drawer_item_matches:
+                fragment = new Matches();
                 break;
 
             default:
@@ -67,8 +70,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         if (fragment != null) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+            Fragment myFragment = getFragmentManager().findFragmentByTag(fragment.getClass().getSimpleName());
+            if (myFragment == null || !myFragment.isVisible()) {
+                getFragmentManager().beginTransaction().replace(R.id.frame_container, fragment, fragment.getClass().getSimpleName()).commit();
+            }
         }
     }
 
