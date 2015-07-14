@@ -9,9 +9,12 @@ import android.view.ViewGroup;
 
 import com.limon.clubelo.clubelobrowser.MainActivity;
 import com.limon.clubelo.clubelobrowser.R;
-import com.limon.clubelo.clubelobrowser.containers.TeamRankingItem;
-import com.limon.clubelo.clubelobrowser.tasks.TeamDetailsTask;
-import com.limon.clubelo.clubelobrowser.tasks.interfaces.TeamRankingsCallback;
+import com.limon.clubelo.clubelobrowser.containers.TeamRatingItem;
+
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloAPIRequester;
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloRequestType;
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloResponse;
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.downloader.DownloaderCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +31,7 @@ import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.LineChartView;
 import lecho.lib.hellocharts.view.PreviewLineChartView;
 
-public class TeamDetailsFragment extends Fragment implements TeamRankingsCallback {
+public class TeamDetailsFragment extends Fragment implements DownloaderCallback {
     private AppCompatActivity appCompatActivity;
     private PreviewLineChartView previewChart;
     private LineChartView chart;
@@ -48,24 +51,26 @@ public class TeamDetailsFragment extends Fragment implements TeamRankingsCallbac
         chart = (LineChartView) rootView.findViewById(R.id.chart);
         previewChart = (PreviewLineChartView) rootView.findViewById(R.id.chart_preview);
 
-        new TeamDetailsTask(appCompatActivity, this).execute(teamName.replace(" ", "").toLowerCase());
+        ClubEloAPIRequester.getAPI(appCompatActivity.getApplicationContext()).getResource(
+                new ClubEloResponse(teamName.replace(" ", "").toLowerCase(), ClubEloRequestType.TEAM_DETAILS, this));
 
         return rootView;
     }
 
 
-
     @Override
-    public void onTeamRankingsReceived(List<TeamRankingItem> teamRankings) {
+    public void onResponseReceived(ClubEloResponse response) {
         List<PointValue> yValues = new ArrayList<>();
         List<AxisValue> xValues = new ArrayList<>();
 
-        String lastYear = teamRankings.get(0).getDateFromString().substring(0, 4);
-        for (int i = 0; i < teamRankings.size(); ++i) {
-            int daySinceStart = ((int) (teamRankings.get(i).getDateFrom().getTime()/86400000)) + 11314; //Calculates days since rating start (10/01/1939)
-            yValues.add(new PointValue(daySinceStart, (int) teamRankings.get(i).getElo()));
+        List<TeamRatingItem> teamRatings = ((List<TeamRatingItem>) response.getResponse());
 
-            String newYear = teamRankings.get(i).getDateFromString().substring(0, 4);
+        String lastYear = teamRatings.get(0).getDateFromString().substring(0, 4);
+        for (int i = 0; i < teamRatings.size(); ++i) {
+            int daySinceStart = ((int) (teamRatings.get(i).getDateFrom().getTime()/86400000)) + 11314; //Calculates days since rating start (10/01/1939)
+            yValues.add(new PointValue(daySinceStart, (int) teamRatings.get(i).getElo()));
+
+            String newYear = teamRatings.get(i).getDateFromString().substring(0, 4);
             if(!lastYear.equals(newYear)) {
                 AxisValue axisValue = new AxisValue(daySinceStart);
                 axisValue.setLabel(newYear);
@@ -110,6 +115,7 @@ public class TeamDetailsFragment extends Fragment implements TeamRankingsCallbac
         previewChart.setCurrentViewport(tempViewport);
         previewChart.setZoomType(ZoomType.HORIZONTAL);
     }
+
 
     /**
      * Viewport listener for preview chart(lower one). in {@link #onViewportChanged(Viewport)} method change

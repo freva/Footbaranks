@@ -13,14 +13,17 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloAPIRequester;
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloRequestType;
 import com.limon.clubelo.clubelobrowser.MainActivity;
 import com.limon.clubelo.clubelobrowser.R;
 import com.limon.clubelo.clubelobrowser.adapters.TeamRankingAdapter;
 import com.limon.clubelo.clubelobrowser.adapters.ToolbarDateRankingsAdapter;
 import com.limon.clubelo.clubelobrowser.containers.ToolbarDateRankingsItem;
-import com.limon.clubelo.clubelobrowser.tasks.TeamRankingsTask;
-import com.limon.clubelo.clubelobrowser.tasks.interfaces.TeamRankingsCallback;
-import com.limon.clubelo.clubelobrowser.containers.TeamRankingItem;
+
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloResponse;
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.downloader.DownloaderCallback;
+import com.limon.clubelo.clubelobrowser.containers.TeamRatingItem;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -32,7 +35,7 @@ import java.util.Locale;
 import general.SpinnerTrigger;
 
 
-public class RankingsFragment extends Fragment implements TeamRankingsCallback, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
+public class RankingsFragment extends Fragment implements DownloaderCallback, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private static final long minDate = -977529600000L; // 10/01/1939
 
@@ -50,8 +53,6 @@ public class RankingsFragment extends Fragment implements TeamRankingsCallback, 
         rootView = inflater.inflate(R.layout.fragment_rankings, container, false);
 
         appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getRatings(new Date());
-
         return rootView;
     }
 
@@ -59,7 +60,8 @@ public class RankingsFragment extends Fragment implements TeamRankingsCallback, 
     private void getRatings(Date date) {
         if(!date.equals(lastDate)) {
             lastDate = date;
-            new TeamRankingsTask(appCompatActivity, this).execute(df.format(date));
+            ClubEloAPIRequester.getAPI(appCompatActivity.getApplicationContext()).getResource(
+                    new ClubEloResponse(df.format(date), ClubEloRequestType.TEAM_RATINGS, this));
         }
     }
 
@@ -85,7 +87,9 @@ public class RankingsFragment extends Fragment implements TeamRankingsCallback, 
     }
 
     @Override
-    public void onTeamRankingsReceived(List<TeamRankingItem> teamRankings) {
+    public void onResponseReceived(ClubEloResponse response) {
+        List<TeamRatingItem> teamRankings = (List<TeamRatingItem>) response.getResponse();
+
         TeamRankingAdapter adapter = new TeamRankingAdapter(appCompatActivity.getApplicationContext(), teamRankings);
 
         ListView listView = (ListView) rootView.findViewById(R.id.lvTeams);
@@ -128,7 +132,7 @@ public class RankingsFragment extends Fragment implements TeamRankingsCallback, 
     //Team ratings click listener
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        TeamRankingItem selectedTeam = ((TeamRankingItem) parent.getItemAtPosition(position));
+        TeamRatingItem selectedTeam = ((TeamRatingItem) parent.getItemAtPosition(position));
 
         Bundle bundle = new Bundle();
         bundle.putString("TEAM_NAME", selectedTeam.getClubName());

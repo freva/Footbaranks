@@ -7,14 +7,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class TeamRankingItem {
+public class TeamRatingItem {
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
 
     private int rank, level;
     private String clubName, countryCode, dateFrom;
     private double elo;
 
-    public TeamRankingItem(String... data) {
+    public TeamRatingItem(String... data) {
         this.rank = (data[0].length() > 2 ? -1 : Integer.parseInt(data[0]));
         this.clubName = data[1];
         this.countryCode = data[2];
