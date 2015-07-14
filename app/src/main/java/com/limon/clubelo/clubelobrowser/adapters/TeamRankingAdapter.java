@@ -26,7 +26,7 @@ public class TeamRankingAdapter extends ArrayAdapter<TeamRatingItem> {
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            convertView = inflater.inflate(R.layout.item_team_ratings, parent, false);
+            convertView = inflater.inflate(R.layout.team_ratings_item, parent, false);
 
             viewHolder = new ViewHolder();
             viewHolder.teamRank = (TextView) convertView.findViewById(R.id.teamRank);

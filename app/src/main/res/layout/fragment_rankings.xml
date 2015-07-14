@@ -1,19 +1,39 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Rankings">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dip"
+    android:animateLayoutChanges="true">
+
+    <LinearLayout
+        android:id="@+id/filter_spinners"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:id="@+id/spinner1"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:id="@+id/spinner2"/>
+    </LinearLayout>
 
     <include
         android:id="@+id/header_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        layout="@layout/item_team_ratings" />
+        layout="@layout/team_ratings_item" />
 
     <ListView
         android:id="@+id/lvTeams"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/header_layout">
+        android:layout_height="wrap_content">
     </ListView>
-</RelativeLayout>
+</LinearLayout>

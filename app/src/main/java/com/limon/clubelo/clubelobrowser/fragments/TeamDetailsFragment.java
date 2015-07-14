@@ -60,10 +60,9 @@ public class TeamDetailsFragment extends Fragment implements DownloaderCallback 
 
     @Override
     public void onResponseReceived(ClubEloResponse response) {
+        List<TeamRatingItem> teamRatings = ((List<TeamRatingItem>) response.getResponse());
         List<PointValue> yValues = new ArrayList<>();
         List<AxisValue> xValues = new ArrayList<>();
-
-        List<TeamRatingItem> teamRatings = ((List<TeamRatingItem>) response.getResponse());
 
         String lastYear = teamRatings.get(0).getDateFromString().substring(0, 4);
         for (int i = 0; i < teamRatings.size(); ++i) {

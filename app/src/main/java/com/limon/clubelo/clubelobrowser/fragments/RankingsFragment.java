@@ -8,8 +8,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -35,12 +37,14 @@ import java.util.Locale;
 import general.SpinnerTrigger;
 
 
-public class RankingsFragment extends Fragment implements DownloaderCallback, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
+public class RankingsFragment extends Fragment implements DownloaderCallback, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private static final long minDate = -977529600000L; // 10/01/1939
 
     private AppCompatActivity appCompatActivity;
+    private LinearLayout filterSpinners;
     private Spinner mNavigationSpinner;
+    private ListView teamRatingsList;
     private Toolbar toolbar;
     private View rootView;
     private Date lastDate;
@@ -51,6 +55,7 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
 
         appCompatActivity = (MainActivity) getActivity();
         rootView = inflater.inflate(R.layout.fragment_rankings, container, false);
+        filterSpinners = (LinearLayout) rootView.findViewById(R.id.filter_spinners);
 
         appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
         return rootView;
@@ -88,13 +93,14 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
 
     @Override
     public void onResponseReceived(ClubEloResponse response) {
-        List<TeamRatingItem> teamRankings = (List<TeamRatingItem>) response.getResponse();
+        List<TeamRatingItem> teamRatings = (List<TeamRatingItem>) response.getResponse();
 
-        TeamRankingAdapter adapter = new TeamRankingAdapter(appCompatActivity.getApplicationContext(), teamRankings);
+        TeamRankingAdapter adapter = new TeamRankingAdapter(appCompatActivity.getApplicationContext(), teamRatings);
 
-        ListView listView = (ListView) rootView.findViewById(R.id.lvTeams);
-        listView.setOnItemClickListener(this);
-        listView.setAdapter(adapter);
+        teamRatingsList = (ListView) rootView.findViewById(R.id.lvTeams);
+        teamRatingsList.setOnItemClickListener(new ListTeamRatingListeners());
+        teamRatingsList.setOnScrollListener(new ListTeamRatingListeners());
+        teamRatingsList.setAdapter(adapter);
     }
 
 
@@ -129,18 +135,37 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
     public void onNothingSelected(AdapterView<?> parent) { }
 
 
-    //Team ratings click listener
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        TeamRatingItem selectedTeam = ((TeamRatingItem) parent.getItemAtPosition(position));
+    private class ListTeamRatingListeners implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
+        private int lastVerticalScrollPosition = 0;
 
-        Bundle bundle = new Bundle();
-        bundle.putString("TEAM_NAME", selectedTeam.getClubName());
+        @Override
+        public void onScrollStateChanged(AbsListView view, int scrollState) {
 
-        Fragment teamDetails = new TeamDetailsFragment();
-        teamDetails.setArguments(bundle);
+        }
 
-        this.getFragmentManager().beginTransaction().replace(R.id.frame_container, teamDetails, teamDetails.getClass().getSimpleName())
-                .addToBackStack(null).commit();
+        @Override
+        public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+            int scrolledOffset = RankingsFragment.this.teamRatingsList.getFirstVisiblePosition();
+            if (scrolledOffset != lastVerticalScrollPosition) {
+                if(scrolledOffset - lastVerticalScrollPosition > 0) filterSpinners.setVisibility(View.GONE);
+                else filterSpinners.setVisibility(View.VISIBLE);
+                lastVerticalScrollPosition = scrolledOffset;
+            }
+        }
+
+
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            TeamRatingItem selectedTeam = ((TeamRatingItem) parent.getItemAtPosition(position));
+
+            Bundle bundle = new Bundle();
+            bundle.putString("TEAM_NAME", selectedTeam.getClubName());
+
+            Fragment teamDetails = new TeamDetailsFragment();
+            teamDetails.setArguments(bundle);
+
+            RankingsFragment.this.getFragmentManager().beginTransaction()
+                    .replace(R.id.frame_container, teamDetails, teamDetails.getClass().getSimpleName())
+                    .addToBackStack(null).commit();
+        }
     }
 }
