@@ -3,6 +3,8 @@ package com.limon.clubelo.clubelobrowser.fragments;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -19,7 +22,6 @@ import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloRequestType;
 import com.limon.clubelo.clubelobrowser.MainActivity;
 import com.limon.clubelo.clubelobrowser.R;
 import com.limon.clubelo.clubelobrowser.adapters.TeamRankingAdapter;
-import com.limon.clubelo.clubelobrowser.adapters.ToolbarDateRankingsAdapter;
 
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloResponse;
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.downloader.DownloaderCallback;
@@ -33,12 +35,11 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class RankingsFragment extends Fragment implements DownloaderCallback, DatePickerDialog.OnDateSetListener {
+public class RankingsFragment extends Fragment implements DownloaderCallback, DatePickerDialog.OnDateSetListener, TextWatcher {
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private static final long minDate = -977529600000L; // 10/01/1939
 
     private TeamRankingAdapter teamRatingsAdapter;
-    private ToolbarDateRankingsAdapter filterSpinnerDateAdapter;
     private MainActivity appCompatActivity;
     private LinearLayout filterSpinners;
     private ListView teamRatingsListView;
@@ -60,6 +61,9 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
         teamRatingsListView = (ListView) rootView.findViewById(R.id.lvTeams);
         teamRatingsListView.setOnItemClickListener(new ListTeamRatingListeners());
         teamRatingsListView.setOnScrollListener(new ListTeamRatingListeners());
+
+        EditText teamSearch = (EditText) rootView.findViewById(R.id.fragment_rankings_team_input);
+        teamSearch.addTextChangedListener(this);
 
         getRatings(new Date());
 
@@ -113,6 +117,17 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
         Calendar cal = Calendar.getInstance();
         cal.set(year, monthOfYear, dayOfMonth);
         getRatings(cal.getTime());
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+    @Override
+    public void afterTextChanged(Editable s) { }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        teamRatingsAdapter.getFilter().filter(s);
     }
 
 

@@ -55,4 +55,8 @@ public class TeamRatingItem {
     public String getDateFromString() {
         return dateFrom;
     }
+
+    public String toString() {
+        return getClubName();
+    }
 }

@@ -11,11 +11,15 @@ import android.widget.TextView;
 import com.limon.clubelo.clubelobrowser.containers.TeamRatingItem;
 import com.limon.clubelo.clubelobrowser.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TeamRankingAdapter extends ArrayAdapter<TeamRatingItem> {
+    List<TeamRatingItem> originalTeams;
+
     public TeamRankingAdapter(Context context, List<TeamRatingItem> teams) {
         super(context, 0, teams);
+        originalTeams = teams;
     }
 
     @Override
@@ -48,7 +52,6 @@ public class TeamRankingAdapter extends ArrayAdapter<TeamRatingItem> {
 
         return convertView;
     }
-
 
     private static class ViewHolder {
         private TextView teamRank, teamName, teamRating;

@@ -23,6 +23,9 @@
             android:id="@+id/fragment_rankings_team_input"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:lines="1"
+            android:maxLines="1"
             android:hint="@string/teamRanking_search_field_hint" />
     </LinearLayout>
 
