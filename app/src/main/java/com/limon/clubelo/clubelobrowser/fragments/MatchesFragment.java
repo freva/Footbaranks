@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,6 +19,7 @@ public class MatchesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         rootView = inflater.inflate(R.layout.fragment_matches, container, false);
         appCompatActivity = (MainActivity) getActivity();
@@ -26,5 +28,12 @@ public class MatchesFragment extends Fragment {
         appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         return rootView;
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_date_pick).setVisible(false);
+        super.onPrepareOptionsMenu(menu);
+
     }
 }

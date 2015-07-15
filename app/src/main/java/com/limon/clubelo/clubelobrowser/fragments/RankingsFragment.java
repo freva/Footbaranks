@@ -3,17 +3,16 @@ package com.limon.clubelo.clubelobrowser.fragments;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
 
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloAPIRequester;
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloRequestType;
@@ -21,7 +20,6 @@ import com.limon.clubelo.clubelobrowser.MainActivity;
 import com.limon.clubelo.clubelobrowser.R;
 import com.limon.clubelo.clubelobrowser.adapters.TeamRankingAdapter;
 import com.limon.clubelo.clubelobrowser.adapters.ToolbarDateRankingsAdapter;
-import com.limon.clubelo.clubelobrowser.containers.ToolbarDateRankingsItem;
 
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloResponse;
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.downloader.DownloaderCallback;
@@ -35,15 +33,14 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class RankingsFragment extends Fragment implements DownloaderCallback {
+public class RankingsFragment extends Fragment implements DownloaderCallback, DatePickerDialog.OnDateSetListener {
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private static final long minDate = -977529600000L; // 10/01/1939
 
     private TeamRankingAdapter teamRatingsAdapter;
     private ToolbarDateRankingsAdapter filterSpinnerDateAdapter;
-    private AppCompatActivity appCompatActivity;
+    private MainActivity appCompatActivity;
     private LinearLayout filterSpinners;
-    private Spinner filterSpinnerDate;
     private ListView teamRatingsListView;
     private View rootView;
     private Date lastDate;
@@ -51,6 +48,7 @@ public class RankingsFragment extends Fragment implements DownloaderCallback {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         appCompatActivity = (MainActivity) getActivity();
         rootView = inflater.inflate(R.layout.fragment_rankings, container, false);
@@ -59,28 +57,19 @@ public class RankingsFragment extends Fragment implements DownloaderCallback {
         appCompatActivity.getSupportActionBar().setTitle(appCompatActivity.getString(R.string.drawer_item_ratings));
         appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        filterSpinnerDateAdapter = new ToolbarDateRankingsAdapter(appCompatActivity.getApplicationContext());
-        filterSpinnerDate = (Spinner) rootView.findViewById(R.id.fragment_rankings_date_spinner);
-        filterSpinnerDate.setAdapter(filterSpinnerDateAdapter);
-        filterSpinnerDate.setOnItemSelectedListener(new DateFilterListeners());
-
-        Button calendarButton = (Button) rootView.findViewById(R.id.fragment_rankings_calendar_button);
-        calendarButton.setOnClickListener(new DateFilterListeners());
-
         teamRatingsListView = (ListView) rootView.findViewById(R.id.lvTeams);
         teamRatingsListView.setOnItemClickListener(new ListTeamRatingListeners());
         teamRatingsListView.setOnScrollListener(new ListTeamRatingListeners());
 
+        getRatings(new Date());
+
         return rootView;
     }
 
-
     private void getRatings(Date date) {
-        if(!date.equals(lastDate)) {
-            lastDate = date;
-            ClubEloAPIRequester.getAPI(appCompatActivity.getApplicationContext()).getResource(
-                    new ClubEloResponse(df.format(date), ClubEloRequestType.TEAM_RATINGS, this));
-        }
+        lastDate = date;
+        ClubEloAPIRequester.getAPI(appCompatActivity.getApplicationContext()).getResource(
+                new ClubEloResponse(df.format(date), ClubEloRequestType.TEAM_RATINGS, this));
     }
 
 
@@ -94,40 +83,36 @@ public class RankingsFragment extends Fragment implements DownloaderCallback {
 
     @Override
     public void onResponseReceived(ClubEloResponse response) {
-        teamRatingsAdapter = new TeamRankingAdapter(appCompatActivity.getApplicationContext(),(List<TeamRatingItem>) response.getResponse());
+        teamRatingsAdapter = new TeamRankingAdapter(appCompatActivity.getApplicationContext(), (List<TeamRatingItem>) response.getResponse());
         teamRatingsListView.setAdapter(teamRatingsAdapter);
     }
 
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        menu.findItem(R.id.action_date_pick).setVisible(true);
+        super.onPrepareOptionsMenu(menu);
 
+    }
 
-    private class DateFilterListeners implements AdapterView.OnItemSelectedListener, View.OnClickListener, DatePickerDialog.OnDateSetListener {
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-            Calendar cal = Calendar.getInstance();
-            cal.set(year, monthOfYear, dayOfMonth);
-            filterSpinnerDateAdapter.setCustomDate(cal.getTime());
-            filterSpinnerDate.setSelection(filterSpinnerDateAdapter.getCount()-1);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_date_pick:
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(lastDate);
+                DatePickerDialog dpd = new DatePickerDialog(appCompatActivity, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+                dpd.getDatePicker().setMinDate(minDate);
+                dpd.getDatePicker().setMaxDate(System.currentTimeMillis());
+                dpd.show();
+                return true;
         }
+        return false;
+    }
 
-
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            Date date = ((ToolbarDateRankingsItem) parent.getItemAtPosition(position)).getDate();
-            getRatings(date);
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) { }
-
-        @Override
-        public void onClick(View v) {
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(lastDate);
-            DatePickerDialog dpd = new DatePickerDialog(appCompatActivity, new DateFilterListeners(), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-            dpd.getDatePicker().setMinDate(minDate);
-            dpd.getDatePicker().setMaxDate(System.currentTimeMillis());
-            dpd.show();
-        }
+    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(year, monthOfYear, dayOfMonth);
+        getRatings(cal.getTime());
     }
 
 

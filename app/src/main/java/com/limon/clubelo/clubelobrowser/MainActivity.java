@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         // load saved navigation state if present
         if (savedInstanceState == null) {
             mNavItemId = R.id.drawer_item_ratings;

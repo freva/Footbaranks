@@ -13,29 +13,6 @@
         android:orientation="vertical"
         android:focusableInTouchMode="true">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/fragment_rankings_date_spinner"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"/>
-
-            <Button
-                android:id="@+id/fragment_rankings_calendar_button"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/icon_calendar">
-            </Button>
-        </LinearLayout>
-
-
         <Spinner
             android:id="@+id/fragment_rankings_country_spinner"
             android:layout_width="match_parent"
