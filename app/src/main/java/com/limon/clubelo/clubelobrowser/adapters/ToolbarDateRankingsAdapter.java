@@ -23,7 +23,6 @@ public class ToolbarDateRankingsAdapter extends ArrayAdapter<ToolbarDateRankings
         mItems.add(new ToolbarDateRankingsItem("Week ago", new Date(System.currentTimeMillis() - (7 * dayInMilliseconds))));
         mItems.add(new ToolbarDateRankingsItem("Month ago", new Date(System.currentTimeMillis() - (30 * dayInMilliseconds))));
         mItems.add(new ToolbarDateRankingsItem("Year ago", new Date(System.currentTimeMillis() - (365 * dayInMilliseconds))));
-        mItems.add(new ToolbarDateRankingsItem("Custom"));
     }
 
     public ToolbarDateRankingsAdapter(Context context) {
@@ -51,11 +50,13 @@ public class ToolbarDateRankingsAdapter extends ArrayAdapter<ToolbarDateRankings
 
 
     public void setCustomDate(Date date) {
-        mItems.get(mItems.size()-1).setDate(date);
-    }
+        if(mItems.get(mItems.size()-1).getTitle().equals("Custom")) {
+            if(date == null) mItems.remove(mItems.size()-1);
+            else mItems.get(mItems.size()-1).setDate(date);
+        } else {
+            if(date != null) mItems.add(new ToolbarDateRankingsItem("Custom", date));
+        }
 
-    public void resetCustomDate() {
-        mItems.get(mItems.size()-1).setDate(null);
-
+        notifyDataSetChanged();
     }
 }

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -34,7 +35,7 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class RankingsFragment extends Fragment implements DownloaderCallback, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
+public class RankingsFragment extends Fragment implements DownloaderCallback {
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private static final long minDate = -977529600000L; // 10/01/1939
 
@@ -61,7 +62,10 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
         filterSpinnerDateAdapter = new ToolbarDateRankingsAdapter(appCompatActivity.getApplicationContext());
         filterSpinnerDate = (Spinner) rootView.findViewById(R.id.fragment_rankings_date_spinner);
         filterSpinnerDate.setAdapter(filterSpinnerDateAdapter);
-        filterSpinnerDate.setOnItemSelectedListener(this);
+        filterSpinnerDate.setOnItemSelectedListener(new DateFilterListeners());
+
+        Button calendarButton = (Button) rootView.findViewById(R.id.fragment_rankings_calendar_button);
+        calendarButton.setOnClickListener(new DateFilterListeners());
 
         teamRatingsListView = (ListView) rootView.findViewById(R.id.lvTeams);
         teamRatingsListView.setOnItemClickListener(new ListTeamRatingListeners());
@@ -95,38 +99,36 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
     }
 
 
-    //Custom date selection listener
-    @Override
-    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-        Calendar cal = Calendar.getInstance();
-        cal.set(year, monthOfYear, dayOfMonth);
-        getRatings(cal.getTime());
-        filterSpinnerDateAdapter.setCustomDate(cal.getTime());
-        filterSpinnerDateAdapter.notifyDataSetChanged();
-    }
 
-
-    //Toolbar dropdown selection listeners
-    @Override
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Date getDate = ((ToolbarDateRankingsItem) parent.getItemAtPosition(position)).getDate();
-        filterSpinnerDateAdapter.setCustomDate(null);
-
-        if(getDate == null) {
+    private class DateFilterListeners implements AdapterView.OnItemSelectedListener, View.OnClickListener, DatePickerDialog.OnDateSetListener {
+        @Override
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
             Calendar cal = Calendar.getInstance();
-            cal.setTime(lastDate);
-            DatePickerDialog dpd = new DatePickerDialog(appCompatActivity, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-            dpd.getDatePicker().setMinDate(minDate);
-            dpd.getDatePicker().setMaxDate(System.currentTimeMillis());
-            dpd.show();
-        } else {
+            cal.set(year, monthOfYear, dayOfMonth);
+            filterSpinnerDateAdapter.setCustomDate(cal.getTime());
+            filterSpinnerDate.setSelection(filterSpinnerDateAdapter.getCount()-1);
+        }
+
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             Date date = ((ToolbarDateRankingsItem) parent.getItemAtPosition(position)).getDate();
             getRatings(date);
         }
-    }
 
-    @Override
-    public void onNothingSelected(AdapterView<?> parent) { }
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) { }
+
+        @Override
+        public void onClick(View v) {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(lastDate);
+            DatePickerDialog dpd = new DatePickerDialog(appCompatActivity, new DateFilterListeners(), cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+            dpd.getDatePicker().setMinDate(minDate);
+            dpd.getDatePicker().setMaxDate(System.currentTimeMillis());
+            dpd.show();
+        }
+    }
 
 
     private class ListTeamRatingListeners implements AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
