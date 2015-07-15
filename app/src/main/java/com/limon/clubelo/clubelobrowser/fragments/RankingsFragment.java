@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,18 +33,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import general.SpinnerTrigger;
-
 
 public class RankingsFragment extends Fragment implements DownloaderCallback, DatePickerDialog.OnDateSetListener, AdapterView.OnItemSelectedListener {
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private static final long minDate = -977529600000L; // 10/01/1939
 
+    private TeamRankingAdapter teamRatingsAdapter;
+    private ToolbarDateRankingsAdapter filterSpinnerDateAdapter;
     private AppCompatActivity appCompatActivity;
     private LinearLayout filterSpinners;
-    private Spinner mNavigationSpinner;
-    private ListView teamRatingsList;
-    private Toolbar toolbar;
+    private Spinner filterSpinnerDate;
+    private ListView teamRatingsListView;
     private View rootView;
     private Date lastDate;
 
@@ -55,9 +53,20 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
 
         appCompatActivity = (MainActivity) getActivity();
         rootView = inflater.inflate(R.layout.fragment_rankings, container, false);
-        filterSpinners = (LinearLayout) rootView.findViewById(R.id.filter_spinners);
+        filterSpinners = (LinearLayout) rootView.findViewById(R.id.fragment_rankings_filter_area);
 
-        appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(false);
+        appCompatActivity.getSupportActionBar().setTitle(appCompatActivity.getString(R.string.drawer_item_ratings));
+        appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+        filterSpinnerDateAdapter = new ToolbarDateRankingsAdapter(appCompatActivity.getApplicationContext());
+        filterSpinnerDate = (Spinner) rootView.findViewById(R.id.fragment_rankings_date_spinner);
+        filterSpinnerDate.setAdapter(filterSpinnerDateAdapter);
+        filterSpinnerDate.setOnItemSelectedListener(this);
+
+        teamRatingsListView = (ListView) rootView.findViewById(R.id.lvTeams);
+        teamRatingsListView.setOnItemClickListener(new ListTeamRatingListeners());
+        teamRatingsListView.setOnScrollListener(new ListTeamRatingListeners());
+
         return rootView;
     }
 
@@ -75,32 +84,14 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
     public void onResume() {
         super.onResume();
 
-        ToolbarDateRankingsAdapter adapter = new ToolbarDateRankingsAdapter(appCompatActivity.getApplicationContext());
-        mNavigationSpinner = new SpinnerTrigger(appCompatActivity.getSupportActionBar().getThemedContext());
-        mNavigationSpinner.setAdapter(adapter);
-        mNavigationSpinner.setOnItemSelectedListener(this);
-
-        toolbar = (Toolbar) appCompatActivity.findViewById(R.id.toolbar);
-        toolbar.addView(mNavigationSpinner);
+        if(teamRatingsAdapter != null) teamRatingsListView.setAdapter(teamRatingsAdapter);
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        toolbar.removeView(mNavigationSpinner);
-    }
 
     @Override
     public void onResponseReceived(ClubEloResponse response) {
-        List<TeamRatingItem> teamRatings = (List<TeamRatingItem>) response.getResponse();
-
-        TeamRankingAdapter adapter = new TeamRankingAdapter(appCompatActivity.getApplicationContext(), teamRatings);
-
-        teamRatingsList = (ListView) rootView.findViewById(R.id.lvTeams);
-        teamRatingsList.setOnItemClickListener(new ListTeamRatingListeners());
-        teamRatingsList.setOnScrollListener(new ListTeamRatingListeners());
-        teamRatingsList.setAdapter(adapter);
+        teamRatingsAdapter = new TeamRankingAdapter(appCompatActivity.getApplicationContext(),(List<TeamRatingItem>) response.getResponse());
+        teamRatingsListView.setAdapter(teamRatingsAdapter);
     }
 
 
@@ -110,6 +101,8 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
         Calendar cal = Calendar.getInstance();
         cal.set(year, monthOfYear, dayOfMonth);
         getRatings(cal.getTime());
+        filterSpinnerDateAdapter.setCustomDate(cal.getTime());
+        filterSpinnerDateAdapter.notifyDataSetChanged();
     }
 
 
@@ -117,6 +110,7 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         Date getDate = ((ToolbarDateRankingsItem) parent.getItemAtPosition(position)).getDate();
+        filterSpinnerDateAdapter.setCustomDate(null);
 
         if(getDate == null) {
             Calendar cal = Calendar.getInstance();
@@ -139,13 +133,11 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
         private int lastVerticalScrollPosition = 0;
 
         @Override
-        public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-        }
+        public void onScrollStateChanged(AbsListView view, int scrollState) { }
 
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            int scrolledOffset = RankingsFragment.this.teamRatingsList.getFirstVisiblePosition();
+            int scrolledOffset = RankingsFragment.this.teamRatingsListView.getFirstVisiblePosition();
             if (scrolledOffset != lastVerticalScrollPosition) {
                 if(scrolledOffset - lastVerticalScrollPosition > 0) filterSpinners.setVisibility(View.GONE);
                 else filterSpinners.setVisibility(View.VISIBLE);

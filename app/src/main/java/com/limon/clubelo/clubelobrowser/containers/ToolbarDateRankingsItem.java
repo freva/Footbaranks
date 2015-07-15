@@ -32,4 +32,8 @@ public class ToolbarDateRankingsItem {
     public Date getDate() {
         return date;
     }
+
+    public void setDate(Date date) {
+        this.value = date == null ? "" : df.format(date);;
+    }
 }

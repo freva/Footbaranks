@@ -7,22 +7,29 @@
     android:animateLayoutChanges="true">
 
     <LinearLayout
-        android:id="@+id/filter_spinners"
+        android:id="@+id/fragment_rankings_filter_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:focusableInTouchMode="true">
 
         <Spinner
+            android:id="@+id/fragment_rankings_date_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:id="@+id/spinner1"/>
+            android:gravity="center_vertical"/>
 
         <Spinner
+            android:id="@+id/fragment_rankings_country_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:id="@+id/spinner2"/>
+            android:gravity="center_vertical"/>
+
+        <EditText
+            android:id="@+id/fragment_rankings_team_input"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/teamRanking_search_field_hint" />
     </LinearLayout>
 
     <include

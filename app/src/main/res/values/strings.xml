@@ -17,4 +17,5 @@
     <string name="dialog_downloading_rankings">Downloading club ratings…</string>
     <string name="dialog_downloading_club_details">Downloading club details…</string>
     <string name="menu_search">Search</string>
+    <string name="teamRanking_search_field_hint">Search teams</string>
 </resources>

@@ -33,24 +33,12 @@ public class ToolbarDateRankingsAdapter extends ArrayAdapter<ToolbarDateRankings
 
     @Override
     public View getView(int position, View view, ViewGroup parent) {
-        if (view == null || !view.getTag().toString().equals("NON_DROPDOWN")) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.toolbar_date, parent, false);
-            view.setTag("NON_DROPDOWN");
-        }
-
-        TextView dateTitle = (TextView) view.findViewById(R.id.toolbarSpinnerDateTitle);
-
-        dateTitle.setText(mItems.get(position).getTitle());
-
-        return view;
+        return getDropDownView(position, view, parent);
     }
 
     @Override
     public View getDropDownView(int position, View view, ViewGroup parent) {
-        if (view == null || !view.getTag().toString().equals("NON_DROPDOWN")) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.toolbar_dropdown_date, parent, false);
-            view.setTag("NON_DROPDOWN");
-        }
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.spinner_date_item, parent, false);
 
         TextView dateTitle = (TextView) view.findViewById(R.id.toolbarSpinnerDateTitle);
         TextView dateValue = (TextView) view.findViewById(R.id.toolbarSpinnerDateValue);
@@ -59,5 +47,15 @@ public class ToolbarDateRankingsAdapter extends ArrayAdapter<ToolbarDateRankings
         dateValue.setText(mItems.get(position).getValue());
 
         return view;
+    }
+
+
+    public void setCustomDate(Date date) {
+        mItems.get(mItems.size()-1).setDate(date);
+    }
+
+    public void resetCustomDate() {
+        mItems.get(mItems.size()-1).setDate(null);
+
     }
 }
