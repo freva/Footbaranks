@@ -25,7 +25,7 @@
         android:id="@+id/teamName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/teamRanking_name"
+        android:text="@string/teamRanking_club_name"
         android:textSize="20sp"
         android:textColor="@color/teamRankings"/>
 

@@ -15,19 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TeamRankingAdapter extends ArrayAdapter<TeamRatingItem> {
-    List<TeamRatingItem> originalTeams;
-
     public TeamRankingAdapter(Context context, List<TeamRatingItem> teams) {
         super(context, 0, teams);
-        originalTeams = teams;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         TeamRatingItem team = getItem(position);
-        ViewHolder viewHolder; // view lookup downloader.cache stored in tag
+        ViewHolder viewHolder;
 
-        // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.team_ratings_item, parent, false);

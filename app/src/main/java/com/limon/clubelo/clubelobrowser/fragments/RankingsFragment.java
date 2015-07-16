@@ -16,11 +16,13 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Spinner;
 
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloAPIRequester;
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloRequestType;
 import com.limon.clubelo.clubelobrowser.MainActivity;
 import com.limon.clubelo.clubelobrowser.R;
+import com.limon.clubelo.clubelobrowser.adapters.FilterCountriesAdapter;
 import com.limon.clubelo.clubelobrowser.adapters.TeamRankingAdapter;
 
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloResponse;
@@ -64,6 +66,10 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
 
         EditText teamSearch = (EditText) rootView.findViewById(R.id.fragment_rankings_team_input);
         teamSearch.addTextChangedListener(this);
+
+        FilterCountriesAdapter filterCountriesAdapter = new FilterCountriesAdapter(appCompatActivity.getApplicationContext());
+        Spinner countryFilter = (Spinner) rootView.findViewById(R.id.fragment_rankings_country_spinner);
+        countryFilter.setAdapter(filterCountriesAdapter);
 
         getRatings(new Date());
 

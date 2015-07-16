@@ -4,7 +4,8 @@
     <string name="options_visit_clubelo">Powered by ClubElo</string>
     <string name="options_about">About</string>
 
-    <string name="teamRanking_name">Name</string>
+    <string name="teamRanking_club_name">Club</string>
+    <string name="teamRanking_country_name">Country</string>
     <string name="teamRanking_rating">Rating</string>
     <string name="country">Country</string>
 
