@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,8 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TeamRankingAdapter extends ArrayAdapter<TeamRatingItem> {
+    private List<TeamRatingItem> originalTeamList;
+    private List<TeamRatingItem> filteredTeamList;
+    private Filter teamFilter;
+
     public TeamRankingAdapter(Context context, List<TeamRatingItem> teams) {
         super(context, 0, teams);
+
+        originalTeamList = filteredTeamList = teams;
     }
 
     @Override
@@ -48,6 +55,79 @@ public class TeamRankingAdapter extends ArrayAdapter<TeamRatingItem> {
 
         return convertView;
     }
+
+    @Override
+    public Filter getFilter() {
+        if (teamFilter == null)
+            teamFilter = new TeamFilter();
+
+        return teamFilter;
+    }
+
+    @Override
+    public int getCount() {
+        return filteredTeamList.size();
+    }
+
+    @Override
+    public TeamRatingItem getItem(int position) {
+        return filteredTeamList.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+
+    private class TeamFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+
+            List<TeamRatingItem> nTeamList = new ArrayList<>();
+            String[] constraints = constraint.toString().split("\\|", -1);
+
+            if(constraints.length == 2) {
+                String clubSearch = constraints[0].toLowerCase();
+                String countrySearch = constraints[1];
+
+
+                for (TeamRatingItem team : originalTeamList) {
+                    if (team.getCountryCode().startsWith(countrySearch)) {
+                        if (team.getClubName().toLowerCase().startsWith(clubSearch)) {
+                            nTeamList.add(team);
+                        } else {
+                            final String[] words = team.getClubName().toLowerCase().split(" ");
+
+                            // Start at index 0, in case valueText starts with space(s)
+                            for (String word : words) {
+                                if (word.startsWith(clubSearch)) {
+                                    nTeamList.add(team);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            results.values = nTeamList;
+            results.count = nTeamList.size();
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            if (results.count == 0) {
+                notifyDataSetInvalidated();
+            } else {
+                filteredTeamList = (List<TeamRatingItem>) results.values;
+                notifyDataSetChanged();
+            }
+        }
+    }
+
 
     private static class ViewHolder {
         private TextView teamRank, teamName, teamRating;

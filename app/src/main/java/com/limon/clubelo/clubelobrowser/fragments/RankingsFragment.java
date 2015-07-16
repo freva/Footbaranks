@@ -28,16 +28,18 @@ import com.limon.clubelo.clubelobrowser.adapters.TeamRankingAdapter;
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloResponse;
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.downloader.DownloaderCallback;
 import com.limon.clubelo.clubelobrowser.containers.TeamRatingItem;
+import com.limon.clubelo.clubelobrowser.data.Country;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
 
-public class RankingsFragment extends Fragment implements DownloaderCallback, DatePickerDialog.OnDateSetListener, TextWatcher {
+public class RankingsFragment extends Fragment implements DownloaderCallback, DatePickerDialog.OnDateSetListener {
     private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
     private static final long minDate = -977529600000L; // 10/01/1939
 
@@ -45,7 +47,8 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
     private MainActivity appCompatActivity;
     private LinearLayout filterSpinners;
     private ListView teamRatingsListView;
-    private View rootView;
+    private Spinner countryFilter;
+    private EditText teamSearch;
     private Date lastDate;
 
     @Override
@@ -53,8 +56,8 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
+        View rootView = inflater.inflate(R.layout.fragment_rankings, container, false);
         appCompatActivity = (MainActivity) getActivity();
-        rootView = inflater.inflate(R.layout.fragment_rankings, container, false);
         filterSpinners = (LinearLayout) rootView.findViewById(R.id.fragment_rankings_filter_area);
 
         appCompatActivity.getSupportActionBar().setTitle(appCompatActivity.getString(R.string.drawer_item_ratings));
@@ -64,12 +67,13 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
         teamRatingsListView.setOnItemClickListener(new ListTeamRatingListeners());
         teamRatingsListView.setOnScrollListener(new ListTeamRatingListeners());
 
-        EditText teamSearch = (EditText) rootView.findViewById(R.id.fragment_rankings_team_input);
-        teamSearch.addTextChangedListener(this);
+        teamSearch = (EditText) rootView.findViewById(R.id.fragment_rankings_team_input);
+        teamSearch.addTextChangedListener(new FilterAreaListeners());
 
         FilterCountriesAdapter filterCountriesAdapter = new FilterCountriesAdapter(appCompatActivity.getApplicationContext());
-        Spinner countryFilter = (Spinner) rootView.findViewById(R.id.fragment_rankings_country_spinner);
+        countryFilter = (Spinner) rootView.findViewById(R.id.fragment_rankings_country_spinner);
         countryFilter.setAdapter(filterCountriesAdapter);
+        countryFilter.setOnItemSelectedListener(new FilterAreaListeners());
 
         getRatings(new Date());
 
@@ -93,8 +97,22 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
 
     @Override
     public void onResponseReceived(ClubEloResponse response) {
-        teamRatingsAdapter = new TeamRankingAdapter(appCompatActivity.getApplicationContext(), (List<TeamRatingItem>) response.getResponse());
+        List<TeamRatingItem> teams = (List<TeamRatingItem>) response.getResponse();
+        teamRatingsAdapter = new TeamRankingAdapter(appCompatActivity.getApplicationContext(), teams);
         teamRatingsListView.setAdapter(teamRatingsAdapter);
+
+        HashSet<String> countries = new HashSet<>();
+        StringBuilder countyList = new StringBuilder();
+        for(TeamRatingItem team : teams) {
+            if(! countries.contains(team.getCountryCode())) {
+                countries.add(team.getCountryCode());
+                countyList.append(team.getCountryCode()).append(" ");
+            }
+        }
+
+        ((FilterCountriesAdapter) countryFilter.getAdapter()).getFilter().filter(countyList.toString());
+
+        filterTeamList();
     }
 
     @Override
@@ -125,15 +143,30 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
         getRatings(cal.getTime());
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+    private void filterTeamList() {
+        Country country = (Country) countryFilter.getSelectedItem();
+        teamRatingsAdapter.getFilter().filter(teamSearch.getText() + "|" + country.getCountryCode());
+    }
 
-    @Override
-    public void afterTextChanged(Editable s) { }
+    private class FilterAreaListeners implements TextWatcher, AdapterView.OnItemSelectedListener {
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            filterTeamList();
+        }
 
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-        teamRatingsAdapter.getFilter().filter(s);
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+        @Override
+        public void afterTextChanged(Editable s) { }
+
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            filterTeamList();
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) { }
     }
 
 

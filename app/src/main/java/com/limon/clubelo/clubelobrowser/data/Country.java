@@ -3,6 +3,7 @@ package com.limon.clubelo.clubelobrowser.data;
 import com.limon.clubelo.clubelobrowser.R;
 
 public enum Country {
+    ALL(R.drawable.flag_eu,             "",    "All"),
     ALBANIA(R.drawable.flag_alb,        "ALB", "Albania"),
     ANDORRA(R.drawable.flag_and,        "AND", "Andorra"),
     ARMENIA(R.drawable.flag_arm,        "ARM", "Armenia"),
@@ -13,7 +14,8 @@ public enum Country {
     BELARUS(R.drawable.flag_blr,        "BLR", "Belarus"),
     BULGARIA(R.drawable.flag_bul,       "BUL", "Bulgaria"),
     CROATIA(R.drawable.flag_cro,        "CRO", "Croatia"),
-    CYPRUS(R.drawable.flag_cyp,         "CYP", "Andorra"),
+    CZECHOSLOVAKIA(R.drawable.flag_csr, "CSR", "Czechoslovakia"),
+    CYPRUS(R.drawable.flag_cyp,         "CYP", "Cyprus"),
     CZECH_REP(R.drawable.flag_cze,      "CZE", "Czech Republic"),
     DENMARK(R.drawable.flag_den,        "DEN", "Denmark"),
     ENGLAND(R.drawable.flag_eng,        "ENG", "England"),
@@ -22,6 +24,8 @@ public enum Country {
     FAROES(R.drawable.flag_far,         "FAR", "Faroe Islands"),
     FINLAND(R.drawable.flag_fin,        "FIN", "Finland"),
     FRANCE(R.drawable.flag_fra,         "FRA", "France"),
+    WEST_GERMANY(R.drawable.flag_frg,   "FRG", "England"),
+    EAST_GERMANY(R.drawable.flag_gdr,   "GDR", "East Germany"),
     GEORGIA(R.drawable.flag_geo,        "GEO", "Georgia"),
     GERMANY(R.drawable.flag_ger,        "GER", "Germany"),
     GIBRALTAR(R.drawable.flag_gib,      "GIB", "Gibraltar"),
@@ -47,6 +51,7 @@ public enum Country {
     PORTUGAL(R.drawable.flag_por,       "POR", "Portugal"),
     ROMANIA(R.drawable.flag_rom,        "ROM", "Romania"),
     RUSSIA(R.drawable.flag_rus,         "RUS", "Russia"),
+    SERBIA_MONTENEGRO(R.drawable.flag_scg,"SCG", "Serbia and Montenegro"),
     SCOTLAND(R.drawable.flag_sco,       "SCO", "Scotland"),
     SLOVAKIA(R.drawable.flag_slk,       "SLK", "Slovakia"),
     SAN_MARINO(R.drawable.flag_smr,     "SMR", "San Marino"),
@@ -56,17 +61,9 @@ public enum Country {
     SWEDEN(R.drawable.flag_swe,         "SWE", "Norway"),
     TURKEY(R.drawable.flag_tur,         "TUR", "Turkey"),
     UKRAINE(R.drawable.flag_ukr,        "UKR", "Ukraine"),
-    WALES(R.drawable.flag_wal,          "WAL", "Wales"),
-
-
-    //Former countries
-    CZECHOSLOVAKIA(R.drawable.flag_csr, "CSR", "Czechoslovakia"),
-    WEST_GERMANY(R.drawable.flag_frg,   "FRG", "England"),
-    EAST_GERMANY(R.drawable.flag_gdr,   "GDR", "East Germany"),
-    SERBIA_MONTENEGRO(R.drawable.flag_scg,"SCG", "Serbia and Montenegro"),
     SOVIET_UNION(R.drawable.flag_urs,   "URS", "Soviet Union"),
-    YUGOSLAVIA(R.drawable.flag_yug,     "YUG", "Yugoslavia");
-
+    YUGOSLAVIA(R.drawable.flag_yug,     "YUG", "Yugoslavia"),
+    WALES(R.drawable.flag_wal,          "WAL", "Wales");
 
 
     private int flagID;
@@ -87,5 +84,9 @@ public enum Country {
 
     public String getCountryName() {
         return countryName;
+    }
+
+    public String toString() {
+        return getCountryCode();
     }
 }
