@@ -15,7 +15,7 @@
         android:id="@+id/countryFlag"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:contentDescription="@string/country"
+        android:contentDescription="@string/teamRanking_country_flag_description"
         android:paddingStart="5dp"
         android:paddingLeft="5dp"
         android:paddingEnd="2dp"

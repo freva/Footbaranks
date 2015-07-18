@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.limon.clubelo.clubelobrowser.MainActivity;
+import com.limon.clubelo.clubelobrowser.R;
 import com.limon.clubelo.clubelobrowser.containers.TeamRatingItem;
 
 import java.io.File;
@@ -30,9 +31,12 @@ public class ClubEloAPIRequester implements DownloaderCallback {
 
     public static ClubEloAPIRequester getAPI(MainActivity activity) {
         if(clubEloAPIRequester == null) {
+            String dialogTitle = activity.getString(R.string.downloader_loading_dialog_title);
+            String dialogSubtitle = activity.getString(R.string.downloader_loading_dialog_subtitle);
+
             clubEloAPIRequester = new ClubEloAPIRequester();
             cacheFolder = LifetimeDiskCache.getDiskCacheDir(activity, "clubeloapicache");
-            loadingDialog = ProgressDialog.show(activity, "Loading", "Please wait...", true);
+            loadingDialog = ProgressDialog.show(activity, dialogTitle, dialogSubtitle, true);
             mainActivity = activity;
         }
         return clubEloAPIRequester;
@@ -68,7 +72,7 @@ public class ClubEloAPIRequester implements DownloaderCallback {
 
         if(isNetworkAvailable()) new Downloader(this).execute(request);
         else {
-            Toast.makeText(mainActivity, "Could not connect to internet", Toast.LENGTH_LONG).show();
+            Toast.makeText(mainActivity, R.string.downloader_error_internet, Toast.LENGTH_LONG).show();
             loadingDialog.hide();
             request.getCallback().onResponseReceived(request);
         }
@@ -115,7 +119,7 @@ public class ClubEloAPIRequester implements DownloaderCallback {
             }
             Log.d("Resource retrieved", "Resource '" + response.getResourceID() + "' was found on disk:" + response.isFromDisk());
             response.getCallback().onResponseReceived(response);
-        } else Toast.makeText(mainActivity, "Could not reach server", Toast.LENGTH_LONG).show();
+        } else Toast.makeText(mainActivity, R.string.downloader_error_server, Toast.LENGTH_LONG).show();
 
         loadingDialog.hide();
     }

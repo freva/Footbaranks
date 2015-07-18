@@ -2,7 +2,6 @@ package com.limon.clubelo.clubelobrowser.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,17 +31,15 @@ import lecho.lib.hellocharts.view.LineChartView;
 import lecho.lib.hellocharts.view.PreviewLineChartView;
 
 public class TeamDetailsFragment extends Fragment implements DownloaderCallback {
-    private MainActivity appCompatActivity;
     private PreviewLineChartView previewChart;
     private LineChartView chart;
-    private View rootView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        rootView = inflater.inflate(R.layout.fragment_team_deatils, container, false);
-        appCompatActivity = (MainActivity) getActivity();
+        View rootView = inflater.inflate(R.layout.fragment_team_deatils, container, false);
+        MainActivity appCompatActivity = (MainActivity) getActivity();
 
         String teamName = getArguments().getString("TEAM_NAME");
         appCompatActivity.getSupportActionBar().setTitle(teamName);

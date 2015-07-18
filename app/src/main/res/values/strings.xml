@@ -5,19 +5,20 @@
     <string name="options_about">About</string>
 
     <string name="teamRanking_club_name">Club</string>
-    <string name="teamRanking_country_name">Country</string>
+    <string name="teamRanking_country_flag_description">Country flag</string>
     <string name="teamRanking_rating">Rating</string>
-    <string name="country">Country</string>
+    <string name="teamRanking_search_field_hint">Search teams</string>
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="drawer_item_ratings">Rankings</string>
     <string name="drawer_item_matches">Matches</string>
 
-    <string name="dialog_downloading">Downloading…</string>
-    <string name="dialog_downloading_rankings">Downloading club ratings…</string>
-    <string name="dialog_downloading_club_details">Downloading club details…</string>
+    <string name="downloader_error_internet">Could not connect to internet</string>
+    <string name="downloader_error_server">Could not reach server</string>
+    <string name="downloader_loading_dialog_title">Loading</string>
+    <string name="downloader_loading_dialog_subtitle">Please wait…</string>
+
     <string name="menu_search">Search</string>
-    <string name="teamRanking_search_field_hint">Search teams</string>
     <string name="toolbar_select_date">Select date</string>
 </resources>
