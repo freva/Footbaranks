@@ -33,9 +33,9 @@ import com.limon.clubelo.clubelobrowser.data.Country;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -83,7 +83,7 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
 
     private void getRatings(Date date) {
         lastDate = date;
-        ClubEloAPIRequester.getAPI(appCompatActivity.getApplicationContext()).getResource(
+        ClubEloAPIRequester.getAPI(appCompatActivity).getResource(
                 new ClubEloResponse(df.format(date), ClubEloRequestType.TEAM_RATINGS, this));
     }
 
@@ -108,6 +108,8 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
     @Override
     public void onResponseReceived(ClubEloResponse response) {
         List<TeamRatingItem> teams = (List<TeamRatingItem>) response.getResponse();
+        if(teams == null) teams = new ArrayList<>();
+
         teamRatingsAdapter = new TeamRankingAdapter(appCompatActivity.getApplicationContext(), teams);
         teamRatingsListView.setAdapter(teamRatingsAdapter);
 

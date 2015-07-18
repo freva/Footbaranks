@@ -32,7 +32,7 @@ import lecho.lib.hellocharts.view.LineChartView;
 import lecho.lib.hellocharts.view.PreviewLineChartView;
 
 public class TeamDetailsFragment extends Fragment implements DownloaderCallback {
-    private AppCompatActivity appCompatActivity;
+    private MainActivity appCompatActivity;
     private PreviewLineChartView previewChart;
     private LineChartView chart;
     private View rootView;
@@ -51,7 +51,7 @@ public class TeamDetailsFragment extends Fragment implements DownloaderCallback 
         chart = (LineChartView) rootView.findViewById(R.id.chart);
         previewChart = (PreviewLineChartView) rootView.findViewById(R.id.chart_preview);
 
-        ClubEloAPIRequester.getAPI(appCompatActivity.getApplicationContext()).getResource(
+        ClubEloAPIRequester.getAPI(appCompatActivity).getResource(
                 new ClubEloResponse(teamName.replace(" ", "").toLowerCase(), ClubEloRequestType.TEAM_DETAILS, this));
 
         return rootView;
@@ -61,6 +61,11 @@ public class TeamDetailsFragment extends Fragment implements DownloaderCallback 
     @Override
     public void onResponseReceived(ClubEloResponse response) {
         List<TeamRatingItem> teamRatings = ((List<TeamRatingItem>) response.getResponse());
+        if(teamRatings == null) {
+            getFragmentManager().popBackStack();
+            return;
+        }
+
         List<PointValue> yValues = new ArrayList<>();
         List<AxisValue> xValues = new ArrayList<>();
 

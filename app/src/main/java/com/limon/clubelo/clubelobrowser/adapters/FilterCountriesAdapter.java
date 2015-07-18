@@ -84,12 +84,8 @@ public class FilterCountriesAdapter extends ArrayAdapter<Country> {
             }
         }
 
-        if (nTeamList.size() == 0) {
-            notifyDataSetInvalidated();
-        } else {
-            mItems = nTeamList;
-            notifyDataSetChanged();
-        }
+        mItems = nTeamList;
+        notifyDataSetChanged();
     }
 
     public int getCountryPosition(Country country) {
