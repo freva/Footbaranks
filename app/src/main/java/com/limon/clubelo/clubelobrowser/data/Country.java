@@ -3,7 +3,7 @@ package com.limon.clubelo.clubelobrowser.data;
 import com.limon.clubelo.clubelobrowser.R;
 
 public enum Country {
-    ALL(R.drawable.flag_eu,             "",    "All"),
+    ALL(R.drawable.flag_eu,             "ALL",    "All"),
     ALBANIA(R.drawable.flag_alb,        "ALB", "Albania"),
     ANDORRA(R.drawable.flag_and,        "AND", "Andorra"),
     ARMENIA(R.drawable.flag_arm,        "ARM", "Armenia"),
@@ -84,9 +84,5 @@ public enum Country {
 
     public String getCountryName() {
         return countryName;
-    }
-
-    public String toString() {
-        return getCountryCode();
     }
 }

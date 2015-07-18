@@ -22,6 +22,7 @@ import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloAPIRequester;
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloRequestType;
 import com.limon.clubelo.clubelobrowser.MainActivity;
 import com.limon.clubelo.clubelobrowser.R;
+import com.limon.clubelo.clubelobrowser.Stats;
 import com.limon.clubelo.clubelobrowser.adapters.FilterCountriesAdapter;
 import com.limon.clubelo.clubelobrowser.adapters.TeamRankingAdapter;
 
@@ -86,6 +87,15 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
                 new ClubEloResponse(df.format(date), ClubEloRequestType.TEAM_RATINGS, this));
     }
 
+    private void updateCountrySpinner(List<TeamRatingItem> teams) {
+        Country prev = (Country) countryFilter.getSelectedItem();
+
+        FilterCountriesAdapter adapter = (FilterCountriesAdapter) countryFilter.getAdapter();
+        adapter.setNumberTeams(Stats.countCountryFrequency(teams));
+
+        if(adapter.getCountryPosition(prev) < 0) countryFilter.setSelection(0);
+        else countryFilter.setSelection(adapter.getCountryPosition(prev));
+    }
 
     @Override
     public void onResume() {
@@ -101,17 +111,7 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
         teamRatingsAdapter = new TeamRankingAdapter(appCompatActivity.getApplicationContext(), teams);
         teamRatingsListView.setAdapter(teamRatingsAdapter);
 
-        HashSet<String> countries = new HashSet<>();
-        StringBuilder countyList = new StringBuilder();
-        for(TeamRatingItem team : teams) {
-            if(! countries.contains(team.getCountryCode())) {
-                countries.add(team.getCountryCode());
-                countyList.append(team.getCountryCode()).append(" ");
-            }
-        }
-
-        ((FilterCountriesAdapter) countryFilter.getAdapter()).getFilter().filter(countyList.toString());
-
+        updateCountrySpinner(teams);
         filterTeamList();
     }
 
@@ -144,9 +144,11 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
     }
 
     private void filterTeamList() {
+        if(teamRatingsAdapter == null) return;
         Country country = (Country) countryFilter.getSelectedItem();
         teamRatingsAdapter.getFilter().filter(teamSearch.getText() + "|" + country.getCountryCode());
     }
+
 
     private class FilterAreaListeners implements TextWatcher, AdapterView.OnItemSelectedListener {
         @Override

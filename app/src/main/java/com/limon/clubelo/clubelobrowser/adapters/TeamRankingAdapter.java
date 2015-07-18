@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.limon.clubelo.clubelobrowser.containers.TeamRatingItem;
 import com.limon.clubelo.clubelobrowser.R;
+import com.limon.clubelo.clubelobrowser.data.Country;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +95,7 @@ public class TeamRankingAdapter extends ArrayAdapter<TeamRatingItem> {
 
 
                 for (TeamRatingItem team : originalTeamList) {
-                    if (team.getCountryCode().startsWith(countrySearch)) {
+                    if (countrySearch.equals(Country.ALL.getCountryCode()) || team.getCountryCode().equals(countrySearch)) {
                         if (team.getClubName().toLowerCase().startsWith(clubSearch)) {
                             nTeamList.add(team);
                         } else {
@@ -119,12 +120,8 @@ public class TeamRankingAdapter extends ArrayAdapter<TeamRatingItem> {
 
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            if (results.count == 0) {
-                notifyDataSetInvalidated();
-            } else {
-                filteredTeamList = (List<TeamRatingItem>) results.values;
-                notifyDataSetChanged();
-            }
+            filteredTeamList = (List<TeamRatingItem>) results.values;
+            notifyDataSetChanged();
         }
     }
 
