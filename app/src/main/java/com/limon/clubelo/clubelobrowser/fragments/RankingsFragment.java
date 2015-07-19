@@ -2,6 +2,7 @@ package com.limon.clubelo.clubelobrowser.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Fragment;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,6 +53,8 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
     private EditText teamSearch;
     private Date lastDate;
 
+    private int scrollPosition, scrollTopPosition, filterMenuVisibility;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,12 +100,29 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
         else countryFilter.setSelection(adapter.getCountryPosition(prev));
     }
 
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        View v = teamRatingsListView.getChildAt(0);
+        filterMenuVisibility = filterSpinners.getVisibility();
+        scrollPosition = teamRatingsListView.getFirstVisiblePosition();
+        scrollTopPosition = (v == null) ? 0 : (v.getTop() - teamRatingsListView.getPaddingTop());
+
+        System.out.println(scrollPosition + " " + filterMenuVisibility);
+    }
+
     @Override
     public void onResume() {
         super.onResume();
 
         if(teamRatingsAdapter != null) teamRatingsListView.setAdapter(teamRatingsAdapter);
+        filterSpinners.setVisibility(filterMenuVisibility);
+        teamRatingsListView.setSelectionFromTop(scrollPosition, scrollTopPosition);
     }
+
 
 
     @Override
@@ -183,7 +203,7 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
         @Override
         public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             int scrolledOffset = RankingsFragment.this.teamRatingsListView.getFirstVisiblePosition();
-            if (scrolledOffset != lastVerticalScrollPosition) {
+            if (Math.abs(scrolledOffset - lastVerticalScrollPosition) > 3) {
                 if(scrolledOffset - lastVerticalScrollPosition > 0) filterSpinners.setVisibility(View.GONE);
                 else filterSpinners.setVisibility(View.VISIBLE);
                 lastVerticalScrollPosition = scrolledOffset;
