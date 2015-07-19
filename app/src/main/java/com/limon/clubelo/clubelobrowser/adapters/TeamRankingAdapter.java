@@ -47,10 +47,8 @@ public class TeamRankingAdapter extends ArrayAdapter<TeamRatingItem> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        int countryResource = convertView.getResources().getIdentifier("flag_" + team.getCountryCode().toLowerCase(), "drawable", parent.getContext().getApplicationContext().getPackageName());
-
         viewHolder.teamRank.setText(team.getRank() != -1 ? Integer.toString(team.getRank()) : "-");
-        viewHolder.countryFlag.setImageResource(countryResource);
+        viewHolder.countryFlag.setImageResource(team.getCountry().getFlagID());
         viewHolder.teamName.setText(team.getClubName());
         viewHolder.teamRating.setText(String.format("%.0f", team.getElo()));
 
@@ -91,11 +89,11 @@ public class TeamRankingAdapter extends ArrayAdapter<TeamRatingItem> {
 
             if(constraints.length == 2) {
                 String clubSearch = constraints[0].toLowerCase();
-                String countrySearch = constraints[1];
+                Country countrySearch = Country.getCountry(constraints[1]);
 
 
                 for (TeamRatingItem team : originalTeamList) {
-                    if (countrySearch.equals(Country.ALL.getCountryCode()) || team.getCountryCode().equals(countrySearch)) {
+                    if (countrySearch == Country.ALL || team.getCountry() == countrySearch) {
                         if (team.getClubName().toLowerCase().startsWith(clubSearch)) {
                             nTeamList.add(team);
                         } else {

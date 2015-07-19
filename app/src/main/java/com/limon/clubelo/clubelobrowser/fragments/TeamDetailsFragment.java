@@ -16,6 +16,7 @@ import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloResponse;
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.downloader.DownloaderCallback;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import lecho.lib.hellocharts.gesture.ZoomType;
@@ -66,15 +67,15 @@ public class TeamDetailsFragment extends Fragment implements DownloaderCallback 
         List<PointValue> yValues = new ArrayList<>();
         List<AxisValue> xValues = new ArrayList<>();
 
-        String lastYear = teamRatings.get(0).getDateFromString().substring(0, 4);
+        int lastYear = teamRatings.get(0).getDateFrom().get(Calendar.YEAR);
         for (int i = 0; i < teamRatings.size(); ++i) {
-            int daySinceStart = ((int) (teamRatings.get(i).getDateFrom().getTime()/86400000)) + 11314; //Calculates days since rating start (10/01/1939)
+            int daySinceStart = ((int) (teamRatings.get(i).getDateFrom().getTime().getTime()/86400000)) + 11314; //Calculates days since rating start (10/01/1939)
             yValues.add(new PointValue(daySinceStart, (int) teamRatings.get(i).getElo()));
 
-            String newYear = teamRatings.get(i).getDateFromString().substring(0, 4);
-            if(!lastYear.equals(newYear)) {
+            int newYear = teamRatings.get(i).getDateFrom().get(Calendar.YEAR);
+            if(lastYear != newYear) {
                 AxisValue axisValue = new AxisValue(daySinceStart);
-                axisValue.setLabel(newYear);
+                axisValue.setLabel(Integer.toString(newYear));
                 xValues.add(axisValue);
                 lastYear = newYear;
             }

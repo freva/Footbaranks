@@ -7,15 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Stats {
-    public static HashMap<String, Integer> countCountryFrequency(List<TeamRatingItem> teams) {
-        HashMap<String, Integer> frequencies = new HashMap<>();
-        frequencies.put(Country.ALL.getCountryCode(), teams.size());
+    public static HashMap<Country, Integer> countCountryFrequency(List<TeamRatingItem> teams) {
+        HashMap<Country, Integer> frequencies = new HashMap<>();
+        frequencies.put(Country.ALL, teams.size());
 
         for(TeamRatingItem team : teams) {
-            if(! frequencies.containsKey(team.getCountryCode())) {
-                frequencies.put(team.getCountryCode(), 1);
+            if(! frequencies.containsKey(team.getCountry())) {
+                frequencies.put(team.getCountry(), 1);
             } else {
-                frequencies.put(team.getCountryCode(), frequencies.get(team.getCountryCode()) + 1);
+                frequencies.put(team.getCountry(), frequencies.get(team.getCountry()) + 1);
             }
         }
 

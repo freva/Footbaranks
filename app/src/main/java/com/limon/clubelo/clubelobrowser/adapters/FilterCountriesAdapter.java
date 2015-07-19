@@ -18,7 +18,7 @@ import java.util.List;
 
 public class FilterCountriesAdapter extends ArrayAdapter<Country> {
     private static List<Country> mItems = Arrays.asList(Country.values());
-    private HashMap<String, Integer> numberTeams;
+    private HashMap<Country, Integer> numberTeams;
 
     public FilterCountriesAdapter(Context context) {
         super(context, 0, mItems);
@@ -51,8 +51,8 @@ public class FilterCountriesAdapter extends ArrayAdapter<Country> {
 
         viewHolder.countryFlag.setImageResource(mItems.get(position).getFlagID());
         viewHolder.countryName.setText(mItems.get(position).getCountryName());
-        if(this.numberTeams != null && this.numberTeams.containsKey(mItems.get(position).getCountryCode())) {
-            int numTeams = this.numberTeams.get(mItems.get(position).getCountryCode());
+        if(this.numberTeams != null && this.numberTeams.containsKey(mItems.get(position))) {
+            int numTeams = this.numberTeams.get(mItems.get(position));
             viewHolder.numberOfTeams.setText(numTeams + (numTeams == 1 ? " team " : " teams"));
         }
 
@@ -74,12 +74,12 @@ public class FilterCountriesAdapter extends ArrayAdapter<Country> {
         return position;
     }
 
-    public void setNumberTeams(HashMap<String, Integer> numberTeams) {
+    public void setNumberTeams(HashMap<Country, Integer> numberTeams) {
         this.numberTeams = numberTeams;
 
         List<Country> nTeamList = new ArrayList<>();
         for(Country country : Country.values()) {
-            if(numberTeams == null || numberTeams.containsKey(country.getCountryCode())) {
+            if(numberTeams == null || numberTeams.containsKey(country)) {
                 nTeamList.add(country);
             }
         }

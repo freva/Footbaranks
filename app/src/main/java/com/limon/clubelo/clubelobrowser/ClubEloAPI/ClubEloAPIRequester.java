@@ -93,10 +93,10 @@ public class ClubEloAPIRequester implements DownloaderCallback {
                     for (int i = 1; i < lines.length; i++) {
                         if (lines[i].length() > 0) {
                             TeamRatingItem teamRatingItem = new TeamRatingItem(lines[i].split(","));
-                            if (teamRatingItem.getDateFrom().getTime() < System.currentTimeMillis()) {
+                            if (teamRatingItem.getDateFrom().getTime().getTime() < System.currentTimeMillis()) {
                                 teamRatings.add(teamRatingItem);
                             } else {
-                                cacheLifetime = teamRatingItem.getDateFrom().getTime();
+                                cacheLifetime = teamRatingItem.getDateFrom().getTime().getTime();
                                 break;
                             }
                         }

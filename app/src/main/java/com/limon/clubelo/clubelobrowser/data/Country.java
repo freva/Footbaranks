@@ -2,6 +2,8 @@ package com.limon.clubelo.clubelobrowser.data;
 
 import com.limon.clubelo.clubelobrowser.R;
 
+import java.util.HashMap;
+
 public enum Country {
     ALL(R.drawable.flag_eu,             "ALL",    "All"),
     ALBANIA(R.drawable.flag_alb,        "ALB", "Albania"),
@@ -63,7 +65,17 @@ public enum Country {
     UKRAINE(R.drawable.flag_ukr,        "UKR", "Ukraine"),
     SOVIET_UNION(R.drawable.flag_urs,   "URS", "Soviet Union"),
     YUGOSLAVIA(R.drawable.flag_yug,     "YUG", "Yugoslavia"),
-    WALES(R.drawable.flag_wal,          "WAL", "Wales");
+    WALES(R.drawable.flag_wal,          "WAL", "Wales"),
+    CHAMPIONS_LEAGUE(R.drawable.flag_ucl,"UCL", "Champions League"),
+    EUROPA_LEAGUE(R.drawable.flag_uel,  "UEL", "Europa League");
+
+    private static HashMap<String, Country> countryList = new HashMap<>();
+
+    static {
+        for(Country county: Country.values()) {
+            countryList.put(county.getCountryCode(), county);
+        }
+    }
 
 
     private int flagID;
@@ -84,5 +96,9 @@ public enum Country {
 
     public String getCountryName() {
         return countryName;
+    }
+
+    public static Country getCountry(String countryCode) {
+        return countryList.get(countryCode);
     }
 }
