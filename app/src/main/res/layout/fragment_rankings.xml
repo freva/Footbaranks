@@ -33,7 +33,7 @@
         android:id="@+id/header_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        layout="@layout/team_ratings_item" />
+        layout="@layout/team_rankings_ratings_item" />
 
     <ListView
         android:id="@+id/lvTeams"

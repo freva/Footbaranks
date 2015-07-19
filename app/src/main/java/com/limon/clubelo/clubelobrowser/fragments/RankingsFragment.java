@@ -110,8 +110,6 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
         filterMenuVisibility = filterSpinners.getVisibility();
         scrollPosition = teamRatingsListView.getFirstVisiblePosition();
         scrollTopPosition = (v == null) ? 0 : (v.getTop() - teamRatingsListView.getPaddingTop());
-
-        System.out.println(scrollPosition + " " + filterMenuVisibility);
     }
 
     @Override

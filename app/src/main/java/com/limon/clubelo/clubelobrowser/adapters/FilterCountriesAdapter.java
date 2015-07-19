@@ -36,7 +36,7 @@ public class FilterCountriesAdapter extends ArrayAdapter<Country> {
 
         if (view == null) {
             LayoutInflater inflater = LayoutInflater.from(getContext());
-            view = inflater.inflate(R.layout.spinner_country_item, parent, false);
+            view = inflater.inflate(R.layout.team_rankings_country_item, parent, false);
 
             viewHolder = new ViewHolder();
             viewHolder.countryFlag = (ImageView) view.findViewById(R.id.filterSpinnerCountryFlag);
