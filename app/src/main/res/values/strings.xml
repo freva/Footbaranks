@@ -9,6 +9,9 @@
     <string name="teamRanking_rating">Rating</string>
     <string name="teamRanking_search_field_hint">Search teams</string>
 
+    <string name="matches_match_item_middle_text">vs.</string>
+    <string name="matches_match_item_percetange_text">%</string>
+
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
     <string name="drawer_item_ratings">Rankings</string>
@@ -21,5 +24,4 @@
 
     <string name="menu_search">Search</string>
     <string name="toolbar_select_date">Select date</string>
-    <string name="matches_match_item_middle_text">vs.</string>
 </resources>

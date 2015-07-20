@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // load saved navigation state if present
         if (savedInstanceState == null) {
-            mNavItemId = R.id.drawer_item_ratings;
+            mNavItemId = R.id.drawer_item_matches;
         } else {
             mNavItemId = savedInstanceState.getInt(NAV_ITEM_ID);
         }
