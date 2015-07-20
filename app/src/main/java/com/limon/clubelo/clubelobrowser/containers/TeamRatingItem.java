@@ -53,6 +53,6 @@ public class TeamRatingItem {
     }
 
     public Calendar getDateFrom() {
-        return dateFrom;
+        return (Calendar) dateFrom.clone();
     }
 }

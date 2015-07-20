@@ -2,7 +2,6 @@ package com.limon.clubelo.clubelobrowser.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Fragment;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;

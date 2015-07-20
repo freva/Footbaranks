@@ -9,11 +9,14 @@ import android.widget.Toast;
 
 import com.limon.clubelo.clubelobrowser.MainActivity;
 import com.limon.clubelo.clubelobrowser.R;
+import com.limon.clubelo.clubelobrowser.containers.MatchItem;
 import com.limon.clubelo.clubelobrowser.containers.TeamRatingItem;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.cache.LifetimeDiskCache;
@@ -84,11 +87,11 @@ public class ClubEloAPIRequester implements DownloaderCallback {
         String originalResponse = (String) response.getResponse();
 
         if(originalResponse != null) {
+            String[] lines = originalResponse.split("\n");
             switch (response.getRequestType()) {
                 case TEAM_RATINGS:
                 case TEAM_DETAILS:
                     List<TeamRatingItem> teamRatings = new ArrayList<>();
-                    String[] lines = originalResponse.split("\n");
 
                     for (int i = 1; i < lines.length; i++) {
                         if (lines[i].length() > 0) {
@@ -107,6 +110,22 @@ public class ClubEloAPIRequester implements DownloaderCallback {
                         cacheLifetime = System.currentTimeMillis() + WEEK_IN_MS;
                     else
                         cacheLifetime = Math.min(System.currentTimeMillis() + WEEK_IN_MS, cacheLifetime);
+                    break;
+
+                case MATCHES:
+                    List<MatchItem> matches = new ArrayList<>();
+
+                    for (int i = 1; i < lines.length; i++) {
+                        if (lines[i].length() > 0) {
+                            matches.add(new MatchItem(lines[i].split(",")));
+                        }
+                    }
+
+                    response.setResponse(matches);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(new Date());
+                    cal.add(Calendar.DAY_OF_YEAR, 1);
+                    cacheLifetime = cal.getTime().getTime();
                     break;
             }
 
