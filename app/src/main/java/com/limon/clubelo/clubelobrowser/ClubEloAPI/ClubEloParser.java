@@ -29,7 +29,7 @@ public class ClubEloParser {
 
         for (int i = 1; i < lines.length; i++) {
             if (lines[i].length() > 0) {
-                matches.add(new MatchItem(lines[i].split(",")));
+                matches.add(new MatchItem(teams, lines[i].split(",")));
             }
         }
 

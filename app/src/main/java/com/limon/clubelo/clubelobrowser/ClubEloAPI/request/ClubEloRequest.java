@@ -1,7 +1,5 @@
 package com.limon.clubelo.clubelobrowser.ClubEloAPI.request;
 
-import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloRequestType;
-
 public class ClubEloRequest {
     private OnClubEloReply callback;
     private ClubEloResponse[] responses;

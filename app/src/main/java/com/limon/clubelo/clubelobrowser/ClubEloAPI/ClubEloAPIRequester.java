@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.request.ClubEloRequest;
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.request.ClubEloRequestType;
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.request.ClubEloResponse;
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.request.OnClubEloReply;
 import com.limon.clubelo.clubelobrowser.MainActivity;
