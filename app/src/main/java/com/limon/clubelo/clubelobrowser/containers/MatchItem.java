@@ -1,33 +1,42 @@
 package com.limon.clubelo.clubelobrowser.containers;
 
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloAPIRequester;
 import com.limon.clubelo.clubelobrowser.data.Country;
+import com.limon.clubelo.clubelobrowser.data.League;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
+import java.util.HashMap;
 
 public class MatchItem {
-    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-
-    private Country country;
     private Calendar dateFrom;
+    private League league;
+    private Country countryHome, countryAway;
     private String teamHome, teamAway;
     private float[] goalDifferenceTable = new float[13];
     private float[][] outcomeProbability = new float[7][7];
 
-    public MatchItem(String... data) {
+    public MatchItem(HashMap<String, TeamRatingItem> teams, String... data) {
         this.dateFrom = Calendar.getInstance();
         try {
-            dateFrom.setTime(df.parse(data[0]));
+            dateFrom.setTime(ClubEloAPIRequester.CLUB_ELO_DATE_FORMAT.parse(data[0]));
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        this.country = Country.getCountry(data[1]);
         this.teamHome = data[2];
         this.teamAway = data[3];
+
+        if(Country.getCountry(data[1]) == null) {
+            countryHome = teams.get(teamHome).getCountry();
+            countryAway = teams.get(teamAway).getCountry();
+            league = League.getLeague(Country.ALL.getCountryCode(), (data[1].equals("UCL")) ? 0 : 1);
+        } else {
+            countryHome = countryAway = Country.getCountry(data[1]);
+            if(teams.get(teamHome) != null) league = League.getLeague(countryHome.getCountryCode(), teams.get(teamHome).getLevel());
+            else if(teams.get(teamAway) != null) league = League.getLeague(countryAway.getCountryCode(), teams.get(teamAway).getLevel());
+        }
+
 
         for(int i=0; i<goalDifferenceTable.length; i++)
             goalDifferenceTable[i] = Float.parseFloat(data[4+i]);
@@ -39,8 +48,16 @@ public class MatchItem {
         }
     }
 
-    public Country getCountry() {
-        return country;
+    public Country getCountryHome() {
+        return countryHome;
+    }
+
+    public Country getCountryAway() {
+        return countryAway;
+    }
+
+    public League getLeague() {
+        return league;
     }
 
     public Calendar getDateFrom() {

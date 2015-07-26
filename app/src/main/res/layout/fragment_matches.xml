@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".Matches">
 
-    <ListView
+    <com.hb.views.PinnedSectionListView
         android:id="@+id/matches_upcoming_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

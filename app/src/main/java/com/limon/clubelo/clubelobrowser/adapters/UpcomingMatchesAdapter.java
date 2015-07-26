@@ -8,11 +8,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hb.views.PinnedSectionListView;
 import com.limon.clubelo.clubelobrowser.R;
 import com.limon.clubelo.clubelobrowser.containers.MatchItem;
 import java.util.List;
 
-public class UpcomingMatchesAdapter extends ArrayAdapter<MatchItem> {
+public class UpcomingMatchesAdapter extends ArrayAdapter<MatchItem> implements PinnedSectionListView.PinnedSectionListAdapter {
     public UpcomingMatchesAdapter(Context context, List<MatchItem> matches) {
         super(context, 0, matches);
     }
@@ -41,9 +42,9 @@ public class UpcomingMatchesAdapter extends ArrayAdapter<MatchItem> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.countryFlag1.setImageResource(match.getCountry().getFlagID());
+        viewHolder.countryFlag1.setImageResource(match.getCountryHome().getFlagID());
         viewHolder.teamName1.setText(match.getTeamHome());
-        viewHolder.countryFlag2.setImageResource(match.getCountry().getFlagID());
+        viewHolder.countryFlag2.setImageResource(match.getCountryAway().getFlagID());
         viewHolder.teamName2.setText(match.getTeamAway());
 
         viewHolder.percentHome.setText(String.format("%.1f", match.getHomeWinProbability()*100) + "%");
@@ -51,6 +52,11 @@ public class UpcomingMatchesAdapter extends ArrayAdapter<MatchItem> {
         viewHolder.percentAway.setText(String.format("%.1f", match.getAwayWinProbability()*100) + "%");
 
         return convertView;
+    }
+
+    @Override
+    public boolean isItemViewTypePinned(int i) {
+        return false;
     }
 
 
