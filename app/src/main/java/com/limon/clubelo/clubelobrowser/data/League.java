@@ -2,7 +2,10 @@ package com.limon.clubelo.clubelobrowser.data;
 
 import com.limon.clubelo.clubelobrowser.R;
 
-public enum Leagues {
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public enum League {
     ALB_O(R.drawable.logo_league_alb_0, Country.ALBANIA,    0, "Kategoria Superiore"),
     AUT_0(R.drawable.logo_league_aut_0, Country.AUSTRIA,    0, "Bundesliga"),
     BEL_0(R.drawable.logo_league_bel_0, Country.BELGIUM,    0, "Pro League"),
@@ -33,13 +36,27 @@ public enum Leagues {
     SWE_0(R.drawable.logo_league_swe_0, Country.SWEDEN,     0, "Allsvenskan"),
     SUI_0(R.drawable.logo_league_sui_0, Country.SWITZERLAND,0, "Super League"),
     TUR_0(R.drawable.logo_league_tur_0, Country.TURKEY,     0, "Süper Lig"),
-    UKR_0(R.drawable.logo_league_ukr_0, Country.UKRAINE,    0, "Premier League");
+    UKR_0(R.drawable.logo_league_ukr_0, Country.UKRAINE,    0, "Premier League"),
+    EUR_0(R.drawable.flag_ucl,          Country.ALL,        0, "Champions League"),
+    EUR_1(R.drawable.flag_uel,          Country.ALL,        1, "Europa League");
+
+    private static HashMap<String, ArrayList<League>> leagueMap = new HashMap<>();
+
+    static {
+        for(League league: League.values()) {
+            if(! leagueMap.containsKey(league.getCountry().getCountryCode())) {
+                leagueMap.put(league.getCountry().getCountryCode(), new ArrayList<League>());
+            }
+
+            leagueMap.get(league.getCountry().getCountryCode()).add(league);
+        }
+    }
 
 
     private int logoID, level;
     private Country country;
     private String leagueName;
-    Leagues(int logoID, Country country, int level, String leagueName) {
+    League(int logoID, Country country, int level, String leagueName) {
         this.logoID = logoID;
         this.country = country;
         this.level = level;
@@ -60,5 +77,12 @@ public enum Leagues {
 
     public String getLeagueName() {
         return leagueName;
+    }
+
+
+    public static League getLeague(String countryCode, int level) {
+        if(! leagueMap.containsKey(countryCode)) return null;
+        if(level < 0 || level >= leagueMap.get(countryCode).size()) return null;
+        return leagueMap.get(countryCode).get(level);
     }
 }

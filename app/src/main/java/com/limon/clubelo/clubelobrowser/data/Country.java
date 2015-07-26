@@ -65,15 +65,13 @@ public enum Country {
     UKRAINE(R.drawable.flag_ukr,        "UKR", "Ukraine"),
     SOVIET_UNION(R.drawable.flag_urs,   "URS", "Soviet Union"),
     YUGOSLAVIA(R.drawable.flag_yug,     "YUG", "Yugoslavia"),
-    WALES(R.drawable.flag_wal,          "WAL", "Wales"),
-    CHAMPIONS_LEAGUE(R.drawable.flag_ucl,"UCL", "Champions League"),
-    EUROPA_LEAGUE(R.drawable.flag_uel,  "UEL", "Europa League");
+    WALES(R.drawable.flag_wal,          "WAL", "Wales");
 
-    private static HashMap<String, Country> countryList = new HashMap<>();
+    private static HashMap<String, Country> countryMap = new HashMap<>();
 
     static {
         for(Country county: Country.values()) {
-            countryList.put(county.getCountryCode(), county);
+            countryMap.put(county.getCountryCode(), county);
         }
     }
 
@@ -99,6 +97,6 @@ public enum Country {
     }
 
     public static Country getCountry(String countryCode) {
-        return countryList.get(countryCode);
+        return countryMap.get(countryCode);
     }
 }
