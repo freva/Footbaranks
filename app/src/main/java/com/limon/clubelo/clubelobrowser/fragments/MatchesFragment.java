@@ -8,24 +8,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloAPIRequester;
-import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloRequestType;
-import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloResponse;
-import com.limon.clubelo.clubelobrowser.ClubEloAPI.downloader.DownloaderCallback;
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.request.ClubEloResponse;
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.request.OnClubEloReply;
 import com.limon.clubelo.clubelobrowser.MainActivity;
 import com.limon.clubelo.clubelobrowser.R;
 import com.limon.clubelo.clubelobrowser.adapters.UpcomingMatchesAdapter;
-import com.limon.clubelo.clubelobrowser.containers.MatchItem;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
-public class MatchesFragment extends Fragment implements DownloaderCallback {
+public class MatchesFragment extends Fragment implements OnClubEloReply {
     private UpcomingMatchesAdapter upcomingMatchesAdapter;
     private ListView upcomingMatchesListView;
-    private MainActivity appCompatActivity;
-
+    private MainActivity mainActivity;
 
 
     @Override
@@ -34,14 +27,13 @@ public class MatchesFragment extends Fragment implements DownloaderCallback {
         setHasOptionsMenu(true);
 
         View rootView = inflater.inflate(R.layout.fragment_matches, container, false);
-        appCompatActivity = (MainActivity) getActivity();
+        mainActivity = (MainActivity) getActivity();
 
-        appCompatActivity.getSupportActionBar().setTitle(appCompatActivity.getString(R.string.drawer_item_matches));
-        appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
+        mainActivity.getSupportActionBar().setTitle(mainActivity.getString(R.string.drawer_item_matches));
+        mainActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         upcomingMatchesListView = (ListView) rootView.findViewById(R.id.matches_upcoming_list);
-        ClubEloAPIRequester.getAPI(appCompatActivity).getResource(
-                new ClubEloResponse("Fixtures", ClubEloRequestType.MATCHES, this));
+
 
         return rootView;
     }
@@ -60,11 +52,8 @@ public class MatchesFragment extends Fragment implements DownloaderCallback {
     }
 
     @Override
-    public void onResponseReceived(ClubEloResponse response) {
-        List<MatchItem> matches = (List<MatchItem>) response.getResponse();
-        if(matches == null) matches = new ArrayList<>();
-
-        upcomingMatchesAdapter = new UpcomingMatchesAdapter(appCompatActivity.getApplicationContext(), matches);
+    public void onReplyReceived(ClubEloResponse response) {
+        //upcomingMatchesAdapter = new UpcomingMatchesAdapter(mainActivity.getApplicationContext(), matches);
         upcomingMatchesListView.setAdapter(upcomingMatchesAdapter);
     }
 }

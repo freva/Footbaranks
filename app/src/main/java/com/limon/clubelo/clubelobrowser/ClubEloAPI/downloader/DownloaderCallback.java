@@ -1,7 +1,7 @@
 package com.limon.clubelo.clubelobrowser.ClubEloAPI.downloader;
 
-import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloResponse;
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.request.ClubEloRequest;
 
 public interface DownloaderCallback {
-    void onResponseReceived(ClubEloResponse response);
+    void onDownloadReceived(ClubEloRequest request);
 }

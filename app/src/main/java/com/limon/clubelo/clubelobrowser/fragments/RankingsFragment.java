@@ -19,33 +19,28 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloAPIRequester;
-import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloRequestType;
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.request.OnClubEloReply;
 import com.limon.clubelo.clubelobrowser.MainActivity;
 import com.limon.clubelo.clubelobrowser.R;
 import com.limon.clubelo.clubelobrowser.Stats;
 import com.limon.clubelo.clubelobrowser.adapters.FilterCountriesAdapter;
 import com.limon.clubelo.clubelobrowser.adapters.TeamRankingAdapter;
 
-import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloResponse;
-import com.limon.clubelo.clubelobrowser.ClubEloAPI.downloader.DownloaderCallback;
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.request.ClubEloResponse;
 import com.limon.clubelo.clubelobrowser.containers.TeamRatingItem;
 import com.limon.clubelo.clubelobrowser.data.Country;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 
-public class RankingsFragment extends Fragment implements DownloaderCallback, DatePickerDialog.OnDateSetListener {
-    private static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+public class RankingsFragment extends Fragment implements OnClubEloReply, DatePickerDialog.OnDateSetListener {
     private static final long minDate = -977529600000L; // 10/01/1939
 
     private TeamRankingAdapter teamRatingsAdapter;
-    private MainActivity appCompatActivity;
+    private MainActivity mainActivity;
     private LinearLayout filterSpinners;
     private ListView teamRatingsListView;
     private Spinner countryFilter;
@@ -60,11 +55,11 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
         setHasOptionsMenu(true);
 
         View rootView = inflater.inflate(R.layout.fragment_rankings, container, false);
-        appCompatActivity = (MainActivity) getActivity();
+        mainActivity = (MainActivity) getActivity();
         filterSpinners = (LinearLayout) rootView.findViewById(R.id.fragment_rankings_filter_area);
 
-        appCompatActivity.getSupportActionBar().setTitle(appCompatActivity.getString(R.string.drawer_item_ratings));
-        appCompatActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
+        mainActivity.getSupportActionBar().setTitle(mainActivity.getString(R.string.drawer_item_ratings));
+        mainActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         teamRatingsListView = (ListView) rootView.findViewById(R.id.lvTeams);
         teamRatingsListView.setOnItemClickListener(new ListTeamRatingListeners());
@@ -73,20 +68,19 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
         teamSearch = (EditText) rootView.findViewById(R.id.fragment_rankings_team_input);
         teamSearch.addTextChangedListener(new FilterAreaListeners());
 
-        FilterCountriesAdapter filterCountriesAdapter = new FilterCountriesAdapter(appCompatActivity.getApplicationContext());
+        FilterCountriesAdapter filterCountriesAdapter = new FilterCountriesAdapter(mainActivity.getApplicationContext());
         countryFilter = (Spinner) rootView.findViewById(R.id.fragment_rankings_country_spinner);
         countryFilter.setAdapter(filterCountriesAdapter);
         countryFilter.setOnItemSelectedListener(new FilterAreaListeners());
 
         getRatings(new Date());
-
         return rootView;
     }
 
     private void getRatings(Date date) {
         lastDate = date;
-        ClubEloAPIRequester.getAPI(appCompatActivity).getResource(
-                new ClubEloResponse(df.format(date), ClubEloRequestType.TEAM_RATINGS, this));
+        ClubEloAPIRequester.getTeamRatings(mainActivity, date, this);
+
     }
 
     private void updateCountrySpinner(List<TeamRatingItem> teams) {
@@ -121,13 +115,13 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
     }
 
 
+    public void onReplyReceived(ClubEloResponse response) {
+        List<TeamRatingItem> teams = null;
 
-    @Override
-    public void onResponseReceived(ClubEloResponse response) {
-        List<TeamRatingItem> teams = (List<TeamRatingItem>) response.getResponse();
+        if(response != null) teams = (List<TeamRatingItem>) response.getParsedResponse();
         if(teams == null) teams = new ArrayList<>();
 
-        teamRatingsAdapter = new TeamRankingAdapter(appCompatActivity.getApplicationContext(), teams);
+        teamRatingsAdapter = new TeamRankingAdapter(mainActivity.getApplicationContext(), teams);
         teamRatingsListView.setAdapter(teamRatingsAdapter);
 
         updateCountrySpinner(teams);
@@ -147,7 +141,7 @@ public class RankingsFragment extends Fragment implements DownloaderCallback, Da
             case R.id.action_date_pick:
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(lastDate);
-                DatePickerDialog dpd = new DatePickerDialog(appCompatActivity, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+                DatePickerDialog dpd = new DatePickerDialog(mainActivity, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
                 dpd.getDatePicker().setMinDate(minDate);
                 dpd.getDatePicker().setMaxDate(System.currentTimeMillis());
                 dpd.show();

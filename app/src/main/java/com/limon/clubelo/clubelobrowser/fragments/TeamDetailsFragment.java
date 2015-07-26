@@ -6,14 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.request.OnClubEloReply;
 import com.limon.clubelo.clubelobrowser.MainActivity;
 import com.limon.clubelo.clubelobrowser.R;
 import com.limon.clubelo.clubelobrowser.containers.TeamRatingItem;
 
 import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloAPIRequester;
-import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloRequestType;
-import com.limon.clubelo.clubelobrowser.ClubEloAPI.ClubEloResponse;
-import com.limon.clubelo.clubelobrowser.ClubEloAPI.downloader.DownloaderCallback;
+import com.limon.clubelo.clubelobrowser.ClubEloAPI.request.ClubEloResponse;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,7 +30,7 @@ import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.LineChartView;
 import lecho.lib.hellocharts.view.PreviewLineChartView;
 
-public class TeamDetailsFragment extends Fragment implements DownloaderCallback {
+public class TeamDetailsFragment extends Fragment implements OnClubEloReply {
     private PreviewLineChartView previewChart;
     private LineChartView chart;
 
@@ -49,16 +48,16 @@ public class TeamDetailsFragment extends Fragment implements DownloaderCallback 
         chart = (LineChartView) rootView.findViewById(R.id.chart);
         previewChart = (PreviewLineChartView) rootView.findViewById(R.id.chart_preview);
 
-        ClubEloAPIRequester.getAPI(appCompatActivity).getResource(
-                new ClubEloResponse(teamName.replace(" ", "").toLowerCase(), ClubEloRequestType.TEAM_DETAILS, this));
-
+        ClubEloAPIRequester.getTeamDetails(appCompatActivity, teamName.replace(" ", "").toLowerCase(), this);
         return rootView;
     }
 
 
     @Override
-    public void onResponseReceived(ClubEloResponse response) {
-        List<TeamRatingItem> teamRatings = ((List<TeamRatingItem>) response.getResponse());
+    public void onReplyReceived(ClubEloResponse response) {
+        List<TeamRatingItem> teamRatings = null;
+
+        if(response != null) teamRatings = (List<TeamRatingItem>) response.getParsedResponse();
         if(teamRatings == null) {
             getFragmentManager().popBackStack();
             return;
