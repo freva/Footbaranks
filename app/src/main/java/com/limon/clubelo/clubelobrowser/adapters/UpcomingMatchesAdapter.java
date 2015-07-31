@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.hb.views.PinnedSectionListView;
 import com.limon.clubelo.clubelobrowser.R;
-import com.limon.clubelo.clubelobrowser.containers.LeagueMatchDayItem;
+import com.limon.clubelo.clubelobrowser.containers.LeagueMatchdayItem;
 import com.limon.clubelo.clubelobrowser.containers.MatchItem;
 import java.util.List;
 
@@ -29,7 +29,7 @@ public class UpcomingMatchesAdapter extends ArrayAdapter<Object> implements Pinn
             case MATCH_ITEM_ID:
                 return populateMatchItem((MatchItem) item, convertView, parent);
             case LEAGUE_ITEM_ID:
-                return populateLeagueItem((LeagueMatchDayItem) item, convertView, parent);
+                return populateLeagueItem((LeagueMatchdayItem) item, convertView, parent);
             default:
                 return convertView;
         }
@@ -43,7 +43,7 @@ public class UpcomingMatchesAdapter extends ArrayAdapter<Object> implements Pinn
     @Override
     public int getItemViewType(int position) {
         if(getItem(position) instanceof MatchItem) return MATCH_ITEM_ID;
-        else if(getItem(position) instanceof LeagueMatchDayItem) return LEAGUE_ITEM_ID;
+        else if(getItem(position) instanceof LeagueMatchdayItem) return LEAGUE_ITEM_ID;
         else return -1;
     }
 
@@ -87,7 +87,7 @@ public class UpcomingMatchesAdapter extends ArrayAdapter<Object> implements Pinn
         return convertView;
     }
 
-    private View populateLeagueItem(LeagueMatchDayItem leagueMatchDayItem, View convertView, ViewGroup parent) {
+    private View populateLeagueItem(LeagueMatchdayItem leagueMatchDayItem, View convertView, ViewGroup parent) {
         LeagueItemViewHolder viewHolder;
 
         if (convertView == null) {

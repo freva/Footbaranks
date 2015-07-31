@@ -14,7 +14,7 @@ import com.limon.clubelo.clubelobrowser.ClubEloAPI.request.OnClubEloReply;
 import com.limon.clubelo.clubelobrowser.MainActivity;
 import com.limon.clubelo.clubelobrowser.R;
 import com.limon.clubelo.clubelobrowser.adapters.UpcomingMatchesAdapter;
-import com.limon.clubelo.clubelobrowser.containers.LeagueMatchDayItem;
+import com.limon.clubelo.clubelobrowser.containers.LeagueMatchdayItem;
 import com.limon.clubelo.clubelobrowser.containers.MatchItem;
 import com.limon.clubelo.clubelobrowser.data.League;
 
@@ -76,7 +76,7 @@ public class MatchesFragment extends Fragment implements OnClubEloReply {
                 lastDate = matchItem.getDateFrom().getTime();
                 lastLeague = matchItem.getLeague();
 
-                matchItems.add(new LeagueMatchDayItem(lastLeague, lastDate));
+                matchItems.add(new LeagueMatchdayItem(lastLeague, lastDate));
                 matchItems.add(matchItem);
             }
         }
