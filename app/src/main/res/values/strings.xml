@@ -24,4 +24,6 @@
 
     <string name="menu_search">Search</string>
     <string name="toolbar_select_date">Select date</string>
+    <string name="matches_league_item_logo">League logo</string>
+    <string name="matches_league_item_name">League</string>
 </resources>

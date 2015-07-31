@@ -40,7 +40,7 @@ public class TeamRankingAdapter extends ArrayAdapter<TeamRatingItem> {
             viewHolder.teamRank = (TextView) convertView.findViewById(R.id.teamRank);
             viewHolder.countryFlag = (ImageView) convertView.findViewById(R.id.countryFlag);
             viewHolder.teamName = (TextView) convertView.findViewById(R.id.teamName);
-            viewHolder.teamRating = (TextView) convertView.findViewById(R.id.teamRating);
+            viewHolder.teamRating = (TextView) convertView.findViewById(R.id.matches_match_item_vs);
 
             convertView.setTag(viewHolder);
         } else {

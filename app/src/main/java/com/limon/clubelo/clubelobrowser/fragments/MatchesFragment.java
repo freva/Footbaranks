@@ -14,9 +14,12 @@ import com.limon.clubelo.clubelobrowser.ClubEloAPI.request.OnClubEloReply;
 import com.limon.clubelo.clubelobrowser.MainActivity;
 import com.limon.clubelo.clubelobrowser.R;
 import com.limon.clubelo.clubelobrowser.adapters.UpcomingMatchesAdapter;
+import com.limon.clubelo.clubelobrowser.containers.LeagueMatchDayItem;
 import com.limon.clubelo.clubelobrowser.containers.MatchItem;
+import com.limon.clubelo.clubelobrowser.data.League;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -59,10 +62,26 @@ public class MatchesFragment extends Fragment implements OnClubEloReply {
     @Override
     public void onReplyReceived(ClubEloResponse response) {
         List<MatchItem> matches = null;
+        List<Object> matchItems = new ArrayList<>();
+        Date lastDate = null;
+        League lastLeague = null;
 
         if(response != null) matches = (List<MatchItem>) response.getParsedResponse();
         if(matches == null) matches = new ArrayList<>();
-        upcomingMatchesAdapter = new UpcomingMatchesAdapter(mainActivity.getApplicationContext(), matches);
+
+        for(MatchItem matchItem: matches) {
+            if(matchItem.getDateFrom().getTime().equals(lastDate) && matchItem.getLeague().equals(lastLeague)) {
+                matchItems.add(matchItem);
+            } else {
+                lastDate = matchItem.getDateFrom().getTime();
+                lastLeague = matchItem.getLeague();
+
+                matchItems.add(new LeagueMatchDayItem(lastLeague, lastDate));
+                matchItems.add(matchItem);
+            }
+        }
+
+        upcomingMatchesAdapter = new UpcomingMatchesAdapter(mainActivity.getApplicationContext(), matchItems);
         upcomingMatchesListView.setAdapter(upcomingMatchesAdapter);
     }
 }

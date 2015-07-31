@@ -30,7 +30,7 @@
         android:textColor="@color/teamRankings"/>
 
     <TextView
-        android:id="@+id/teamRating"
+        android:id="@+id/matches_match_item_vs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="end"
