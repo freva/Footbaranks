@@ -33,6 +33,6 @@
             android:layout_height="wrap_content"
             android:text="@string/matches_match_item_middle_text"
             android:textSize="16sp"
-            android:textColor="@color/teamRankings"/>
+            android:textColor="#777"/>
     </LinearLayout>
 </LinearLayout>

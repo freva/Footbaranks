@@ -12,7 +12,12 @@ import com.hb.views.PinnedSectionListView;
 import com.limon.clubelo.clubelobrowser.R;
 import com.limon.clubelo.clubelobrowser.containers.LeagueMatchdayItem;
 import com.limon.clubelo.clubelobrowser.containers.MatchItem;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class UpcomingMatchesAdapter extends ArrayAdapter<Object> implements PinnedSectionListView.PinnedSectionListAdapter {
     private static final int MATCH_ITEM_ID = 0, LEAGUE_ITEM_ID = 1;
@@ -106,9 +111,54 @@ public class UpcomingMatchesAdapter extends ArrayAdapter<Object> implements Pinn
 
         viewHolder.leagueLogo.setImageResource(leagueMatchDayItem.getLeague().getLogoID());
         viewHolder.leagueTitle.setText(leagueMatchDayItem.getLeague().getLeagueName());
-        viewHolder.matchDate.setText(Long.toString(leagueMatchDayItem.getDate().getTime()));
+        viewHolder.matchDate.setText(formatDate(leagueMatchDayItem.getDate()));
 
         return convertView;
+    }
+
+
+    private static String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
+        SimpleDateFormat fullSdf = new SimpleDateFormat("E, dd/MM/yyyy", Locale.ENGLISH);
+
+        Calendar toFormat = Calendar.getInstance();
+        toFormat.setTime(date);
+
+        switch (daysBetween(toFormat, Calendar.getInstance())) {
+            case -1:
+                return "Yesterday, " + sdf.format(date);
+
+            case 0:
+                return "Today, " + sdf.format(date);
+
+            case 1:
+                return "Tomorrow, " + sdf.format(date);
+
+            default:
+                return fullSdf.format(date);
+        }
+    }
+
+    private static int daysBetween(Calendar day1, Calendar day2){
+        Calendar dayOne = (Calendar) day1.clone(), dayTwo = (Calendar) day2.clone();
+
+        if (dayOne.get(Calendar.YEAR) == dayTwo.get(Calendar.YEAR)) {
+            return dayOne.get(Calendar.DAY_OF_YEAR) - dayTwo.get(Calendar.DAY_OF_YEAR);
+        } else {
+            if (dayTwo.get(Calendar.YEAR) > dayOne.get(Calendar.YEAR)) {
+                Calendar temp = dayOne;
+                dayOne = dayTwo;
+                dayTwo = temp;
+            }
+
+            int extraDays = 0;
+            while (dayOne.get(Calendar.YEAR) > dayTwo.get(Calendar.YEAR)) {
+                dayOne.add(Calendar.YEAR, -1);
+                extraDays += dayOne.getActualMaximum(Calendar.DAY_OF_YEAR);
+            }
+
+            return day1.compareTo(day2) * (extraDays - dayTwo.get(Calendar.DAY_OF_YEAR) + dayOne.get(Calendar.DAY_OF_YEAR));
+        }
     }
 
 
