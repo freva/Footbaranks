@@ -9,6 +9,7 @@
         android:id="@+id/matches_league_item_logo"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_margin="2dp"
         android:contentDescription="@string/matches_league_item_logo"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

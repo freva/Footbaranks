@@ -19,6 +19,7 @@ import com.limon.clubelo.clubelobrowser.containers.MatchItem;
 import com.limon.clubelo.clubelobrowser.data.League;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -63,20 +64,29 @@ public class MatchesFragment extends Fragment implements OnClubEloReply {
     public void onReplyReceived(ClubEloResponse response) {
         List<MatchItem> matches = null;
         List<Object> matchItems = new ArrayList<>();
-        Date lastDate = null;
-        League lastLeague = null;
+        List<LeagueMatchdayItem> leagueMatchdayItems = new ArrayList<>();
+        LeagueMatchdayItem lastLeague = null;
 
         if(response != null) matches = (List<MatchItem>) response.getParsedResponse();
         if(matches == null) matches = new ArrayList<>();
 
         for(MatchItem matchItem: matches) {
-            if(matchItem.getDateFrom().getTime().equals(lastDate) && matchItem.getLeague().equals(lastLeague)) {
-                matchItems.add(matchItem);
-            } else {
-                lastDate = matchItem.getDateFrom().getTime();
-                lastLeague = matchItem.getLeague();
+            if(lastLeague == null ||
+                    !lastLeague.getLeague().equals(matchItem.getLeague()) ||
+                    !lastLeague.getDate().equals(matchItem.getDateFrom().getTime())) {
+                lastLeague = new LeagueMatchdayItem(matchItem.getLeague(), matchItem.getDateFrom().getTime());
+                leagueMatchdayItems.add(lastLeague);
+            }
 
-                matchItems.add(new LeagueMatchdayItem(lastLeague, lastDate));
+            lastLeague.addMatch(matchItem);
+        }
+
+        Collections.sort(leagueMatchdayItems);
+        for(LeagueMatchdayItem league: leagueMatchdayItems) {
+            matchItems.add(league);
+
+            Collections.sort(league.getMatches());
+            for(MatchItem matchItem: league.getMatches()) {
                 matchItems.add(matchItem);
             }
         }

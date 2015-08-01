@@ -8,13 +8,14 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.HashMap;
 
-public class MatchItem {
+public class MatchItem implements Comparable<MatchItem> {
     private Calendar dateFrom;
     private League league;
     private Country countryHome, countryAway;
     private String teamHome, teamAway;
     private float[] goalDifferenceTable = new float[13];
     private float[][] outcomeProbability = new float[7][7];
+    private double eloHome, eloAway;
 
     public MatchItem(HashMap<String, TeamRatingItem> teams, String... data) {
         this.dateFrom = Calendar.getInstance();
@@ -33,10 +34,11 @@ public class MatchItem {
             league = League.getLeague(Country.ALL.getCountryCode(), (data[1].equals("UCL")) ? 0 : 1);
         } else {
             countryHome = countryAway = Country.getCountry(data[1]);
-            if(teams.get(teamHome) != null) league = League.getLeague(countryHome.getCountryCode(), teams.get(teamHome).getLevel());
-            else if(teams.get(teamAway) != null) league = League.getLeague(countryAway.getCountryCode(), teams.get(teamAway).getLevel());
+            league = League.getLeague(countryHome.getCountryCode(), teams.get(teamHome).getLevel());
         }
 
+        eloHome = teams.get(teamHome).getElo();
+        eloAway = teams.get(teamAway).getElo();
 
         for(int i=0; i<goalDifferenceTable.length; i++)
             goalDifferenceTable[i] = Float.parseFloat(data[4+i]);
@@ -97,5 +99,20 @@ public class MatchItem {
         for(int i=-6; i<0; i++)
             probability += getGoalDifferenceProbability(i);
         return probability;
+    }
+
+    public double getEloHome() {
+        return eloHome;
+    }
+
+    public double getEloAway() {
+        return eloAway;
+    }
+
+    @Override
+    public int compareTo(MatchItem another) {
+        double thisMatchElo = getEloHome() + getEloAway();
+        double otherMatchElo = another.getEloHome() + another.getEloAway();
+        return (int) (thisMatchElo - otherMatchElo);
     }
 }
