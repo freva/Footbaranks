@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.limon.clubelo.clubelobrowser">
+    package="com.limon.footbaranks">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission  android:name="android.permission.ACCESS_NETWORK_STATE"/>
@@ -10,12 +10,12 @@
     <application
         tools:replace="android:allowBackup"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo_footbaranks"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.limon.footbaranks.MainActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/app_name" >
             <intent-filter>

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ClubElo</string>
+    <string name="app_name">Footbaranks</string>
 
     <string name="options_visit_clubelo">Powered by ClubElo</string>
     <string name="options_about">About</string>
@@ -11,6 +11,8 @@
 
     <string name="matches_match_item_middle_text">vs.</string>
     <string name="matches_match_item_percetange_text">%</string>
+    <string name="matches_league_item_logo">League logo</string>
+    <string name="matches_league_item_name">League</string>
 
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
@@ -24,6 +26,4 @@
 
     <string name="menu_search">Search</string>
     <string name="toolbar_select_date">Select date</string>
-    <string name="matches_league_item_logo">League logo</string>
-    <string name="matches_league_item_name">League</string>
 </resources>
