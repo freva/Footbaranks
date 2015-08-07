@@ -44,7 +44,14 @@ public class LeagueMatchdayItem implements Comparable<LeagueMatchdayItem> {
         if(! otherLeague.getDate().equals(getDate())) {
             return getDate().compareTo(otherLeague.getDate());
         } else {
-            return (int) (getAverageElo() - otherLeague.getAverageElo());
+            return (int) (otherLeague.getAverageElo() - getAverageElo());
         }
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if(! (other instanceof LeagueMatchdayItem)) return false;
+        LeagueMatchdayItem otherLeague = (LeagueMatchdayItem) other;
+        return otherLeague.getLeague() == getLeague() && otherLeague.getDate().equals(getDate());
     }
 }

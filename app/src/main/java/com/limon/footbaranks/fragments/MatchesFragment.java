@@ -63,20 +63,17 @@ public class MatchesFragment extends Fragment implements OnClubEloReply {
         List<MatchItem> matches = null;
         List<Object> matchItems = new ArrayList<>();
         List<LeagueMatchdayItem> leagueMatchdayItems = new ArrayList<>();
-        LeagueMatchdayItem lastLeague = null;
 
         if(response != null) matches = (List<MatchItem>) response.getParsedResponse();
         if(matches == null) matches = new ArrayList<>();
 
         for(MatchItem matchItem: matches) {
-            if(lastLeague == null ||
-                    !lastLeague.getLeague().equals(matchItem.getLeague()) ||
-                    !lastLeague.getDate().equals(matchItem.getDateFrom().getTime())) {
-                lastLeague = new LeagueMatchdayItem(matchItem.getLeague(), matchItem.getDateFrom().getTime());
-                leagueMatchdayItems.add(lastLeague);
+            LeagueMatchdayItem league = new LeagueMatchdayItem(matchItem.getLeague(), matchItem.getDateFrom().getTime());
+            if(! leagueMatchdayItems.contains(league)) {
+                leagueMatchdayItems.add(league);
             }
 
-            lastLeague.addMatch(matchItem);
+            leagueMatchdayItems.get(leagueMatchdayItems.indexOf(league)).addMatch(matchItem);
         }
 
         Collections.sort(leagueMatchdayItems);
