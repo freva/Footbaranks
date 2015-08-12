@@ -38,7 +38,8 @@ public enum League {
     TUR_0(R.drawable.logo_league_tur_0, Country.TURKEY,     0, "Süper Lig"),
     UKR_0(R.drawable.logo_league_ukr_0, Country.UKRAINE,    0, "Ukrainian Premier League"),
     EUR_0(R.drawable.flag_ucl,          Country.ALL,        0, "Champions League"),
-    EUR_1(R.drawable.flag_uel,          Country.ALL,        1, "Europa League");
+    EUR_1(R.drawable.flag_uel,          Country.ALL,        1, "Europa League"),
+    MISC(R.drawable.logo_league_misc,   Country.ALL,        -1, "Miscellaneous Leagues");
 
     private static HashMap<String, ArrayList<League>> leagueMap = new HashMap<>();
 
@@ -81,8 +82,8 @@ public enum League {
 
 
     public static League getLeague(String countryCode, int level) {
-        if(! leagueMap.containsKey(countryCode)) return null;
-        if(level < 0 || level >= leagueMap.get(countryCode).size()) return null;
+        if(! leagueMap.containsKey(countryCode)) return League.MISC;
+        if(level < 0 || level >= leagueMap.get(countryCode).size()) return League.MISC;
         return leagueMap.get(countryCode).get(level);
     }
 }

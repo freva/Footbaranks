@@ -51,4 +51,9 @@ public class TeamRatingItem {
     public Calendar getDateFrom() {
         return (Calendar) dateFrom.clone();
     }
+
+
+    public String toString() {
+        return clubName + " in " + country.getCountryName() + " at " + level;
+    }
 }
