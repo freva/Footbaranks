@@ -40,12 +40,6 @@ public class MatchItem implements Comparable<MatchItem> {
             league = League.getLeague(countryHome.getCountryCode(), (clubA != null ? clubA : clubH).getLevel());
         }
 
-        if(league == null) {
-            System.out.println(data[2] + " " + data[3] + " | " + data[1]);
-            System.out.println(clubH);
-            System.out.println(clubA);
-        }
-
         eloHome = clubH != null ? clubH.getElo() : 1000;
         eloAway = clubA != null ? clubA.getElo() : 1000;
 

@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.limon.footbaranks.ClubEloAPI.ClubEloAPIRequester;
 import com.limon.footbaranks.ClubEloAPI.request.ClubEloResponse;
 import com.limon.footbaranks.ClubEloAPI.request.OnClubEloReply;
 import com.limon.footbaranks.MainActivity;
+import com.limon.footbaranks.MatchDetailsDialog;
 import com.limon.footbaranks.R;
 import com.limon.footbaranks.adapters.UpcomingMatchesAdapter;
 import com.limon.footbaranks.containers.LeagueMatchdayItem;
@@ -24,9 +26,9 @@ import java.util.List;
 
 public class MatchesFragment extends Fragment implements OnClubEloReply {
     private UpcomingMatchesAdapter upcomingMatchesAdapter;
+    private MatchDetailsDialog matchDetailsDialog;
     private ListView upcomingMatchesListView;
     private MainActivity mainActivity;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,12 +36,15 @@ public class MatchesFragment extends Fragment implements OnClubEloReply {
         setHasOptionsMenu(true);
 
         View rootView = inflater.inflate(R.layout.fragment_matches, container, false);
-        mainActivity = (MainActivity) getActivity();
 
+        mainActivity = (MainActivity) getActivity();
         mainActivity.getSupportActionBar().setTitle(mainActivity.getString(R.string.drawer_item_matches));
         mainActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
 
         upcomingMatchesListView = (ListView) rootView.findViewById(R.id.matches_upcoming_list);
+        upcomingMatchesListView.setOnItemClickListener(new MatchDetailsListener());
+
+        matchDetailsDialog = new MatchDetailsDialog(mainActivity);
 
         ClubEloAPIRequester.getUpcomingMatches(mainActivity, this);
         return rootView;
@@ -88,5 +93,15 @@ public class MatchesFragment extends Fragment implements OnClubEloReply {
 
         upcomingMatchesAdapter = new UpcomingMatchesAdapter(mainActivity.getApplicationContext(), matchItems);
         upcomingMatchesListView.setAdapter(upcomingMatchesAdapter);
+    }
+
+    private class MatchDetailsListener implements AdapterView.OnItemClickListener {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if(! upcomingMatchesAdapter.isItemViewTypePinned(position)) return;
+            MatchItem matchItem = (MatchItem) parent.getItemAtPosition(position);
+            matchDetailsDialog.displayMatchDetails(matchItem);
+        }
     }
 }
