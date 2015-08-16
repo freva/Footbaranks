@@ -116,6 +116,6 @@ public class MatchItem implements Comparable<MatchItem> {
     public int compareTo(MatchItem another) {
         double thisMatchElo = getEloHome() + getEloAway();
         double otherMatchElo = another.getEloHome() + another.getEloAway();
-        return (int) (thisMatchElo - otherMatchElo);
+        return (int) (otherMatchElo - thisMatchElo);
     }
 }
