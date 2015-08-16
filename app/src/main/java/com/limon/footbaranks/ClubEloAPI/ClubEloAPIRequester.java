@@ -120,7 +120,6 @@ public class ClubEloAPIRequester implements DownloaderCallback {
     @Override
     public void onDownloadReceived(ClubEloRequest request) {
         if(request.isAllRequestsCompleted()) {
-            long cacheLifetime = Long.MAX_VALUE;
             ClubEloResponse response = null;
             String[] rawResponse;
 
@@ -132,6 +131,7 @@ public class ClubEloAPIRequester implements DownloaderCallback {
                     List<TeamRatingItem> ratings = ClubEloParser.parseTeamRatings(rawResponse);
                     response.setParsedResponse(ratings);
 
+                    long cacheLifetime = Long.MAX_VALUE;
                     if (request.getRequestType() == ClubEloRequestType.TEAM_RATINGS) {
                         cacheLifetime = System.currentTimeMillis() + WEEK_IN_MS;
                     } else {
@@ -139,6 +139,7 @@ public class ClubEloAPIRequester implements DownloaderCallback {
                             cacheLifetime = ratings.get(ratings.size()-1).getDateFrom().getTime().getTime();
                         cacheLifetime = Math.min(System.currentTimeMillis() + WEEK_IN_MS, cacheLifetime);
                     }
+                    response.setCacheLifeTime(cacheLifetime);
                     break;
 
                 case MATCHES:
@@ -154,15 +155,18 @@ public class ClubEloAPIRequester implements DownloaderCallback {
 
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(new Date());
+                    cal.set(Calendar.HOUR_OF_DAY, 0);
+                    cal.set(Calendar.MINUTE, 0);
                     cal.add(Calendar.DAY_OF_YEAR, 1);
-                    cacheLifetime = cal.getTime().getTime();
+                    request.getResponses()[0].setCacheLifeTime(System.currentTimeMillis() + WEEK_IN_MS);
+                    request.getResponses()[1].setCacheLifeTime(cal.getTime().getTime());
                     break;
             }
 
             for(ClubEloResponse cacheResponse: request.getResponses()) {
                 if (getLifetimeDiskCache() != null && !cacheResponse.isFromDisk()) {
                     try {
-                        lifetimeDiskCache.putString(cacheResponse.getResourceID(), cacheResponse.getResponse(), cacheLifetime);
+                        lifetimeDiskCache.putString(cacheResponse.getResourceID(), cacheResponse.getResponse(), cacheResponse.getCacheLifeTime());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

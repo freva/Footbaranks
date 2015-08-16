@@ -5,6 +5,7 @@ public class ClubEloResponse {
     private String response;
     private Object parsedResponse;
     private boolean fromDisk;
+    private long cacheLifeTime;
 
     public ClubEloResponse(String resourceID) {
         this.resourceID = resourceID;
@@ -36,5 +37,13 @@ public class ClubEloResponse {
 
     public void setFromDisk(boolean fromDisk) {
         this.fromDisk = fromDisk;
+    }
+
+    public long getCacheLifeTime() {
+        return cacheLifeTime;
+    }
+
+    public void setCacheLifeTime(long cacheLifeTime) {
+        this.cacheLifeTime = cacheLifeTime;
     }
 }
