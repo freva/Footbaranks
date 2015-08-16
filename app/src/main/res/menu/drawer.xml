@@ -3,12 +3,12 @@
     <!-- group with single selected item so only one item is highlighted in the nav menu -->
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/drawer_item_ratings"
-            android:icon="@drawable/drawer_icon_list"
-            android:title="@string/drawer_item_ratings"/>
-        <item
             android:id="@+id/drawer_item_matches"
             android:icon="@drawable/drawer_icon_football"
             android:title="@string/drawer_item_matches"/>
+        <item
+            android:id="@+id/drawer_item_ratings"
+            android:icon="@drawable/drawer_icon_list"
+            android:title="@string/drawer_item_ratings"/>
     </group>
 </menu>
