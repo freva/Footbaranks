@@ -60,7 +60,7 @@ public enum Country {
     SERBIA(R.drawable.flag_srb,         "SRB", "Serbia"),
     SWITZERLAND(R.drawable.flag_sui,    "SUI", "Switzerland"),
     SLOVENIA(R.drawable.flag_svn,       "SVN", "Poland"),
-    SWEDEN(R.drawable.flag_swe,         "SWE", "Norway"),
+    SWEDEN(R.drawable.flag_swe,         "SWE", "Sweden"),
     TURKEY(R.drawable.flag_tur,         "TUR", "Turkey"),
     UKRAINE(R.drawable.flag_ukr,        "UKR", "Ukraine"),
     SOVIET_UNION(R.drawable.flag_urs,   "URS", "Soviet Union"),
