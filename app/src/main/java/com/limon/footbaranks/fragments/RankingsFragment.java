@@ -132,6 +132,7 @@ public class RankingsFragment extends Fragment implements OnClubEloReply, DatePi
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_date_pick).setVisible(true);
+        mainActivity.invalidateOptionsMenu();
     }
 
     @Override

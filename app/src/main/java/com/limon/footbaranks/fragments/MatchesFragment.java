@@ -26,7 +26,6 @@ import java.util.List;
 
 public class MatchesFragment extends Fragment implements OnClubEloReply, TabLayout.OnTabSelectedListener {
     private MainActivity mainActivity;
-    private MatchesTabAdapter matchesTabAdapter;
     private TabLayout tabHost;
     private ViewPager viewPager;
 
@@ -52,6 +51,7 @@ public class MatchesFragment extends Fragment implements OnClubEloReply, TabLayo
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         menu.findItem(R.id.action_date_pick).setVisible(false);
+        mainActivity.invalidateOptionsMenu();
     }
 
     @Override
@@ -87,12 +87,12 @@ public class MatchesFragment extends Fragment implements OnClubEloReply, TabLayo
             }
         }
 
-        matchesTabAdapter = new MatchesTabAdapter(mainActivity.getSupportFragmentManager(), matchItems);
+        MatchesTabAdapter matchesTabAdapter = new MatchesTabAdapter(mainActivity.getSupportFragmentManager(), matchItems);
         viewPager.setAdapter(matchesTabAdapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabHost));
         tabHost.setOnTabSelectedListener(this);
 
-        for(int i=0; i<matchesTabAdapter.getCount(); i++) {
+        for(int i=0; i< matchesTabAdapter.getCount(); i++) {
             tabHost.addTab(tabHost.newTab().setText(matchesTabAdapter.getPageTitle(i)));
         }
     }
