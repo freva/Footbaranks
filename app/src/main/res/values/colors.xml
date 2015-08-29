@@ -6,7 +6,10 @@
     <color name="colorPrimaryDark">#0277BD</color>
     <color name="colorAccent">#2A2D34</color>
 
-    <color name="colorFragmentBackground">#fff</color>
+    <color name="fragmentBackground">#EEE</color>
+    <color name="tabTextBackground">#FFF</color>
+
+
     <color name="drawer_header_bg">#aaa</color>
     <color name="drawer_layout_bg">#eee</color>
 

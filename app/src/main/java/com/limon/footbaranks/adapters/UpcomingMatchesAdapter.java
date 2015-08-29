@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.hb.views.PinnedSectionListView;
 import com.limon.footbaranks.R;
+import com.limon.footbaranks.Utils;
 import com.limon.footbaranks.containers.LeagueMatchdayItem;
 import com.limon.footbaranks.containers.MatchItem;
 
@@ -85,7 +86,7 @@ public class UpcomingMatchesAdapter extends ArrayAdapter<Object> implements Pinn
         viewHolder.countryFlag2.setImageResource(match.getCountryAway().getFlagID());
         viewHolder.teamName2.setText(match.getTeamAway());
 
-        viewHolder.percentHome.setText(String.format("%.1f", match.getHomeWinProbability()*100) + "%");
+        viewHolder.percentHome.setText(String.format("%.1f", match.getHomeWinProbability() * 100) + "%");
         viewHolder.percentDraw.setText(String.format("%.1f", match.getDrawProbability()*100) + "%");
         viewHolder.percentAway.setText(String.format("%.1f", match.getAwayWinProbability()*100) + "%");
 
@@ -119,12 +120,12 @@ public class UpcomingMatchesAdapter extends ArrayAdapter<Object> implements Pinn
 
     private static String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH);
-        SimpleDateFormat fullSdf = new SimpleDateFormat("E, dd/MM/yyyy", Locale.ENGLISH);
+        SimpleDateFormat fullSdf = new SimpleDateFormat("EEEE, dd/MM/yyyy", Locale.ENGLISH);
 
         Calendar toFormat = Calendar.getInstance();
         toFormat.setTime(date);
 
-        switch (daysBetween(toFormat, Calendar.getInstance())) {
+        switch (Utils.daysBetween(toFormat, Calendar.getInstance())) {
             case -1:
                 return "Yesterday, " + sdf.format(date);
 
@@ -138,29 +139,6 @@ public class UpcomingMatchesAdapter extends ArrayAdapter<Object> implements Pinn
                 return fullSdf.format(date);
         }
     }
-
-    private static int daysBetween(Calendar day1, Calendar day2){
-        Calendar dayOne = (Calendar) day1.clone(), dayTwo = (Calendar) day2.clone();
-
-        if (dayOne.get(Calendar.YEAR) == dayTwo.get(Calendar.YEAR)) {
-            return dayOne.get(Calendar.DAY_OF_YEAR) - dayTwo.get(Calendar.DAY_OF_YEAR);
-        } else {
-            if (dayTwo.get(Calendar.YEAR) > dayOne.get(Calendar.YEAR)) {
-                Calendar temp = dayOne;
-                dayOne = dayTwo;
-                dayTwo = temp;
-            }
-
-            int extraDays = 0;
-            while (dayOne.get(Calendar.YEAR) > dayTwo.get(Calendar.YEAR)) {
-                dayOne.add(Calendar.YEAR, -1);
-                extraDays += dayOne.getActualMaximum(Calendar.DAY_OF_YEAR);
-            }
-
-            return day1.compareTo(day2) * (extraDays - dayTwo.get(Calendar.DAY_OF_YEAR) + dayOne.get(Calendar.DAY_OF_YEAR));
-        }
-    }
-
 
     private static class MatchItemViewHolder {
         private ImageView countryFlag1, countryFlag2;

@@ -1,13 +1,26 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Matches">
 
-    <com.hb.views.PinnedSectionListView
-        android:id="@+id/matches_upcoming_list"
+    <it.neokree.materialtabs.MaterialTabHost
+        android:id="@+id/materialTabHost"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:dividerHeight="2.0sp"
-        android:divider="@android:color/transparent"/>
-</RelativeLayout>
+        android:layout_height="48dp"
+        app:textColor="@color/colorAccent"
+        app:primaryColor="@color/tabTextBackground"
+        app:accentColor="@color/colorPrimary" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+    </android.support.v4.view.ViewPager>
+</LinearLayout>

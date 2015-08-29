@@ -2,30 +2,36 @@ package com.limon.footbaranks.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.limon.footbaranks.ClubEloAPI.ClubEloAPIRequester;
 import com.limon.footbaranks.ClubEloAPI.request.ClubEloResponse;
 import com.limon.footbaranks.ClubEloAPI.request.OnClubEloReply;
 import com.limon.footbaranks.MainActivity;
 import com.limon.footbaranks.R;
-import com.limon.footbaranks.adapters.UpcomingMatchesAdapter;
+import com.limon.footbaranks.adapters.MatchesTabAdapter;
 import com.limon.footbaranks.containers.LeagueMatchdayItem;
 import com.limon.footbaranks.containers.MatchItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
+import it.neokree.materialtabs.MaterialTab;
+import it.neokree.materialtabs.MaterialTabHost;
+import it.neokree.materialtabs.MaterialTabListener;
 
-public class MatchesFragment extends Fragment implements OnClubEloReply {
-    private UpcomingMatchesAdapter upcomingMatchesAdapter;
-    private ListView upcomingMatchesListView;
+
+public class MatchesFragment extends Fragment implements OnClubEloReply, MaterialTabListener {
     private MainActivity mainActivity;
+    private MatchesTabAdapter matchesTabAdapter;
+    private MaterialTabHost tabHost;
+    private ViewPager viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,7 +44,17 @@ public class MatchesFragment extends Fragment implements OnClubEloReply {
         mainActivity.getSupportActionBar().setTitle(mainActivity.getString(R.string.drawer_item_matches));
         mainActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        upcomingMatchesListView = (ListView) rootView.findViewById(R.id.matches_upcoming_list);
+        tabHost = (MaterialTabHost) rootView.findViewById(R.id.materialTabHost);
+        viewPager = (ViewPager) rootView.findViewById(R.id.pager);
+
+
+        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+            @Override
+            public void onPageSelected(int position) {
+                tabHost.setSelectedNavigationItem(position);
+            }
+        });
+
 
         ClubEloAPIRequester.getUpcomingMatches(mainActivity, this);
         return rootView;
@@ -51,17 +67,10 @@ public class MatchesFragment extends Fragment implements OnClubEloReply {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-
-        if(upcomingMatchesAdapter != null) upcomingMatchesListView.setAdapter(upcomingMatchesAdapter);
-    }
-
-    @Override
     public void onReplyReceived(ClubEloResponse response) {
         List<MatchItem> matches = null;
-        List<Object> matchItems = new ArrayList<>();
         List<LeagueMatchdayItem> leagueMatchdayItems = new ArrayList<>();
+        List<List<Object>> matchItems = new ArrayList<>();
 
         if(response != null) matches = (List<MatchItem>) response.getParsedResponse();
         if(matches == null) matches = new ArrayList<>();
@@ -75,17 +84,36 @@ public class MatchesFragment extends Fragment implements OnClubEloReply {
             leagueMatchdayItems.get(leagueMatchdayItems.indexOf(league)).addMatch(matchItem);
         }
 
+        Date lastDate = new Date(0);
         Collections.sort(leagueMatchdayItems);
         for(LeagueMatchdayItem league: leagueMatchdayItems) {
-            matchItems.add(league);
+            if(lastDate.getTime() < league.getDate().getTime()) {
+                matchItems.add(new ArrayList<>());
+                lastDate = league.getDate();
+            }
+            matchItems.get(matchItems.size()-1).add(league);
 
             Collections.sort(league.getMatches());
             for(MatchItem matchItem: league.getMatches()) {
-                matchItems.add(matchItem);
+                matchItems.get(matchItems.size()-1).add(matchItem);
             }
         }
 
-        upcomingMatchesAdapter = new UpcomingMatchesAdapter(mainActivity.getApplicationContext(), matchItems);
-        upcomingMatchesListView.setAdapter(upcomingMatchesAdapter);
+        matchesTabAdapter = new MatchesTabAdapter(mainActivity.getSupportFragmentManager(), matchItems);
+        viewPager.setAdapter(matchesTabAdapter);
+
+        for (int i = 0; i < matchesTabAdapter.getCount(); i++) {
+            tabHost.addTab(tabHost.newTab().setText(matchesTabAdapter.getPageTitle(i)).setTabListener(this));
+        }
     }
+
+    public void onTabSelected(MaterialTab tab) {
+        viewPager.setCurrentItem(tab.getPosition());
+    }
+
+    @Override
+    public void onTabReselected(MaterialTab materialTab) { }
+
+    @Override
+    public void onTabUnselected(MaterialTab materialTab) { }
 }

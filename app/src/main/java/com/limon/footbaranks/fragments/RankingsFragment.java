@@ -22,7 +22,7 @@ import com.limon.footbaranks.ClubEloAPI.ClubEloAPIRequester;
 import com.limon.footbaranks.ClubEloAPI.request.OnClubEloReply;
 import com.limon.footbaranks.MainActivity;
 import com.limon.footbaranks.R;
-import com.limon.footbaranks.Stats;
+import com.limon.footbaranks.Utils;
 import com.limon.footbaranks.adapters.FilterCountriesAdapter;
 import com.limon.footbaranks.adapters.TeamRankingAdapter;
 
@@ -87,7 +87,7 @@ public class RankingsFragment extends Fragment implements OnClubEloReply, DatePi
         Country prev = (Country) countryFilter.getSelectedItem();
 
         FilterCountriesAdapter adapter = (FilterCountriesAdapter) countryFilter.getAdapter();
-        adapter.setNumberTeams(Stats.countCountryFrequency(teams));
+        adapter.setNumberTeams(Utils.countCountryFrequency(teams));
 
         if(adapter.getCountryPosition(prev) < 0) countryFilter.setSelection(0);
         else countryFilter.setSelection(adapter.getCountryPosition(prev));

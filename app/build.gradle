@@ -31,11 +31,12 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:appcompat-v7:22.2.0'
-    compile 'com.android.support:design:22.2.0'
+    compile 'com.android.support:appcompat-v7:22.2.1'
+    compile 'com.android.support:design:22.2.1'
     compile 'com.github.lecho:hellocharts-android:v1.5.5'
     compile 'com.github.beworker:pinned-section-listview:v1.6-beta.2'
     compile 'com.jakewharton:disklrucache:2.0.2'
     compile 'commons-io:commons-io:2.4'
+    compile 'it.neokree:MaterialTabs:0.11'
 }
 
