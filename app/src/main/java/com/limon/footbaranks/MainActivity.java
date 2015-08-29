@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String NAV_ITEM_ID = "navItemId";
 
     private final Handler mDrawerActionHandler = new Handler();
-    private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private DrawerLayout mDrawerLayout;
     private int mNavItemId;
 
     @Override
@@ -123,20 +123,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    //Options menu stuff
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.support.v7.appcompat.R.id.home) {
-            return mDrawerToggle.onOptionsItemSelected(item);
-        }
-
         switch (item.getItemId()) {
+            case android.support.v7.appcompat.R.id.home:
+                return mDrawerToggle.onOptionsItemSelected(item);
+
             case R.id.options_visit_clubelo:
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.clubelo.com"));
                 startActivity(browserIntent);

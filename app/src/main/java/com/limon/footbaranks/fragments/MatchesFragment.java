@@ -50,8 +50,8 @@ public class MatchesFragment extends Fragment implements OnClubEloReply, TabLayo
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_date_pick).setVisible(false);
         super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.action_date_pick).setVisible(false);
     }
 
     @Override

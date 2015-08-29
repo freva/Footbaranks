@@ -7,8 +7,9 @@
         android:id="@+id/options_visit_clubelo"
         android:title="@string/options_visit_clubelo"/>
 
-    <item android:id="@+id/action_date_pick"
+    <item
+        android:id="@+id/action_date_pick"
         android:icon="@drawable/icon_calendar"
         android:title="@string/toolbar_select_date"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom|withText" />
 </menu>
