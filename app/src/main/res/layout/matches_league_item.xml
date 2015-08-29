@@ -31,8 +31,7 @@
             android:id="@+id/matches_league_item_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/matches_match_item_middle_text"
             android:textSize="16sp"
-            android:textColor="#777"/>
+            android:textColor="@color/match_league_item_date"/>
     </LinearLayout>
 </LinearLayout>

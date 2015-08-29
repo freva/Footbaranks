@@ -32,13 +32,13 @@
     </LinearLayout>
 
     <include
-        android:id="@+id/header_layout"
+        android:id="@+id/fragment_rankings_header_layout"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         layout="@layout/team_rankings_ratings_item" />
 
     <ListView
-        android:id="@+id/lvTeams"
+        android:id="@+id/fragment_rankings_team_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </ListView>

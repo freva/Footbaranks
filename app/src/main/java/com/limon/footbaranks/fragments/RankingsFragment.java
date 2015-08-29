@@ -61,7 +61,7 @@ public class RankingsFragment extends Fragment implements OnClubEloReply, DatePi
         mainActivity.getSupportActionBar().setTitle(mainActivity.getString(R.string.drawer_item_ratings));
         mainActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        teamRatingsListView = (ListView) rootView.findViewById(R.id.lvTeams);
+        teamRatingsListView = (ListView) rootView.findViewById(R.id.fragment_rankings_team_list);
         teamRatingsListView.setOnItemClickListener(new ListTeamRatingListeners());
         teamRatingsListView.setOnScrollListener(new ListTeamRatingListeners());
 

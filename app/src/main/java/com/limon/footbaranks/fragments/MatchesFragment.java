@@ -44,8 +44,8 @@ public class MatchesFragment extends Fragment implements OnClubEloReply, Materia
         mainActivity.getSupportActionBar().setTitle(mainActivity.getString(R.string.drawer_item_matches));
         mainActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        tabHost = (MaterialTabHost) rootView.findViewById(R.id.materialTabHost);
-        viewPager = (ViewPager) rootView.findViewById(R.id.pager);
+        tabHost = (MaterialTabHost) rootView.findViewById(R.id.fragment_matches_tab_host);
+        viewPager = (ViewPager) rootView.findViewById(R.id.fragment_matches_view_pager);
 
 
         viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {

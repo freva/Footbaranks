@@ -9,10 +9,10 @@
     <color name="fragmentBackground">#EEE</color>
     <color name="tabTextBackground">#FFF</color>
 
-
     <color name="drawer_header_bg">#aaa</color>
     <color name="drawer_layout_bg">#eee</color>
 
     <color name="match_item_percentage">#555</color>
+    <color name="match_league_item_date">#777</color>
 
 </resources>
