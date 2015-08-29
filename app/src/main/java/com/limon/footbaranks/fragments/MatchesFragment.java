@@ -2,6 +2,7 @@ package com.limon.footbaranks.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,15 +23,11 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import it.neokree.materialtabs.MaterialTab;
-import it.neokree.materialtabs.MaterialTabHost;
-import it.neokree.materialtabs.MaterialTabListener;
 
-
-public class MatchesFragment extends Fragment implements OnClubEloReply, MaterialTabListener {
+public class MatchesFragment extends Fragment implements OnClubEloReply, TabLayout.OnTabSelectedListener {
     private MainActivity mainActivity;
     private MatchesTabAdapter matchesTabAdapter;
-    private MaterialTabHost tabHost;
+    private TabLayout tabHost;
     private ViewPager viewPager;
 
     @Override
@@ -44,17 +41,8 @@ public class MatchesFragment extends Fragment implements OnClubEloReply, Materia
         mainActivity.getSupportActionBar().setTitle(mainActivity.getString(R.string.drawer_item_matches));
         mainActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        tabHost = (MaterialTabHost) rootView.findViewById(R.id.fragment_matches_tab_host);
+        tabHost = (TabLayout) rootView.findViewById(R.id.fragment_matches_tabs);
         viewPager = (ViewPager) rootView.findViewById(R.id.fragment_matches_view_pager);
-
-
-        viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                tabHost.setSelectedNavigationItem(position);
-            }
-        });
-
 
         ClubEloAPIRequester.getUpcomingMatches(mainActivity, this);
         return rootView;
@@ -101,19 +89,22 @@ public class MatchesFragment extends Fragment implements OnClubEloReply, Materia
 
         matchesTabAdapter = new MatchesTabAdapter(mainActivity.getSupportFragmentManager(), matchItems);
         viewPager.setAdapter(matchesTabAdapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabHost));
+        tabHost.setOnTabSelectedListener(this);
 
-        for (int i = 0; i < matchesTabAdapter.getCount(); i++) {
-            tabHost.addTab(tabHost.newTab().setText(matchesTabAdapter.getPageTitle(i)).setTabListener(this));
+        for(int i=0; i<matchesTabAdapter.getCount(); i++) {
+            tabHost.addTab(tabHost.newTab().setText(matchesTabAdapter.getPageTitle(i)));
         }
     }
 
-    public void onTabSelected(MaterialTab tab) {
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
         viewPager.setCurrentItem(tab.getPosition());
     }
 
     @Override
-    public void onTabReselected(MaterialTab materialTab) { }
+    public void onTabUnselected(TabLayout.Tab tab) { }
 
     @Override
-    public void onTabUnselected(MaterialTab materialTab) { }
+    public void onTabReselected(TabLayout.Tab tab) { }
 }

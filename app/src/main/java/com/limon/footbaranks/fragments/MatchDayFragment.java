@@ -18,6 +18,7 @@ import java.util.List;
 public class MatchDayFragment extends Fragment {
     private UpcomingMatchesAdapter upcomingMatchesAdapter;
     private ListView upcomingMatchesListView;
+    private MainActivity mainActivity;
     private List matchItems;
 
     @Override
@@ -27,7 +28,7 @@ public class MatchDayFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.matches_tab, container, false);
 
-        MainActivity mainActivity = (MainActivity) getActivity();
+        mainActivity = (MainActivity) getActivity();
         mainActivity.getSupportActionBar().setTitle(mainActivity.getString(R.string.drawer_item_matches));
         mainActivity.getSupportActionBar().setDisplayShowTitleEnabled(true);
 

@@ -37,6 +37,5 @@ dependencies {
     compile 'com.github.beworker:pinned-section-listview:v1.6-beta.2'
     compile 'com.jakewharton:disklrucache:2.0.2'
     compile 'commons-io:commons-io:2.4'
-    compile 'it.neokree:MaterialTabs:0.11'
 }
 
